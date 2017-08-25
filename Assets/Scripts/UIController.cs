@@ -8,11 +8,12 @@ public class UIController : MonoBehaviour
 	Slider MainHPSlider, MainHPBlur, MainMPSlider, MainSPSlider, HPSlider, MPSlider, SPSlider, LvSlider;
 	Text Lv, Str, Dex, Int, Will, Luck, PA, MA, Crit, PDef, PPro, MDef, MPro, AP, APts;
 	[SerializeField]
-	private int exp = 1000;
+	private int exp = 10000;
 
 	[SerializeField]
 	Transform player, hpBar;
 	PlayerStats pStats;
+	Combat combat;
 
 	#region Singleton
 
@@ -34,6 +35,7 @@ public class UIController : MonoBehaviour
 		player = GameObject.FindWithTag("Player").transform;
 		//
 		pStats = PlayerStats.instance;
+		combat = Combat.instance;
 		InventoryWin = IFCanvas.transform.Find("Inventory").gameObject;
 		StatsWin = IFCanvas.transform.Find("Stats").gameObject;
 
@@ -68,15 +70,15 @@ public class UIController : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			pStats.Dot(pStats.maxHP * .08f, 3f, 12f);
+			combat.Dot(pStats.maxHP * .08f, 3f, 12f);
 		}
 		if (Input.GetKeyDown(KeyCode.W))
 		{
-			pStats.Dot(pStats.maxHP * .52f, 18f, 22f, 0f, 0f);
+			combat.Dot(pStats.maxHP * .00f, 50f, 40f, 0f, 0f);
 		}
 		if (Input.GetKeyDown(KeyCode.E))
 		{
-			pStats.Hot(pStats.maxHP * .01f, pStats.maxMP * .01f, pStats.maxSP * .01f, .3f, 5f);
+			combat.Hot(pStats.maxHP * .01f, pStats.maxMP * .01f, pStats.maxSP * .01f, .3f, 5f);
 		}
 		if (Input.GetKey(KeyCode.R))
 		{
@@ -172,7 +174,11 @@ public class UIController : MonoBehaviour
 		Will.text = string.Format("{0} ({1})", pStats.curWill.ToString("0"), pStats.curWill.ToString("0"));
 		Luck.text = string.Format("{0} ({1})", pStats.curLuck.ToString("0"), pStats.curLuck.ToString("0"));
 
-		PA.text = string.Format("{0}<color=#FFD500FF>(+{2})</color> ~ {1}<color=#FFD500FF>(+{3})</color>", pStats.curPAmin.ToString("0"), pStats.curPAmax.ToString("0"), pStats.curWpmin.ToString("0"), pStats.curWpmax.ToString("0"));
+		PA.text = string.Format("{0}<color=#FFD500FF>({2})</color> ~ {1}<color=#FFD500FF>({3})</color>",
+			(pStats.curPAmin + pStats.curWeaMin).ToString("0"),
+			(pStats.curPAmax + pStats.curWeaMax).ToString("0"),
+			pStats.curPAmin.ToString("0"),
+			pStats.curPAmax.ToString("0"));
 		MA.text = string.Format("{0} ({1})", pStats.curMA.ToString("0"), pStats.curMA.ToString("0"));
 		Crit.text = string.Format("{0}% (+{1}%)", pStats.curCritRate.ToString("0"), pStats.curCritDam.ToString("0"));
 		PDef.text = pStats.curPDef.ToString("0");

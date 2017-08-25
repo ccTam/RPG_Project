@@ -9,9 +9,11 @@ public class PlayerController : MonoBehaviour
 	Interactable focus;
 	public LayerMask movementMask;
 
+	Vector3 lastpos;
 	Camera cam;
 	PlayerMotor motor;
 	PlayerStats pStats;
+	bool isMoving = false, lastMoving = false;
 
 	[SerializeField]
 	List<RaycastResult> raycastResults;
@@ -70,6 +72,31 @@ public class PlayerController : MonoBehaviour
 				RemoveFocus();
 			}
 		}
+		//Slow Regen while moving
+		float mag = (transform.position - lastpos).magnitude;
+		float HPv = .4f, MPv = .4f, SPv = .5f;
+		if (mag > 0)
+			isMoving = true;
+		else
+			isMoving = false;
+		if (lastMoving != isMoving)
+		{
+			if (isMoving)
+			{
+				pStats.curHPR_M -= HPv;
+				pStats.curMPR_M -= MPv;
+				pStats.curSPR_M -= SPv;
+			}
+			else
+			{
+				pStats.curHPR_M += HPv;
+				pStats.curMPR_M += MPv;
+				pStats.curSPR_M += SPv;
+			}
+				
+		}
+		lastpos = transform.position;
+		lastMoving = isMoving;
 	}
 	void SetFocus(Interactable newFocus)
 	{

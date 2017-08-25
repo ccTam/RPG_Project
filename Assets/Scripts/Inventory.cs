@@ -25,6 +25,13 @@ public class Inventory : MonoBehaviour
 	public const int space = 20;
 	public List<Item> Litems = new List<Item>();
 
+	private PlayerStats pStats;
+
+	private void Start()
+	{
+		pStats = PlayerStats.instance;	
+	}
+
 	public bool Add(Item item)
 	{
 		if (!item.isDefaultItem)
@@ -33,6 +40,14 @@ public class Inventory : MonoBehaviour
 			{
 				Debug.Log("Inventory is FULL");
 				return false;
+			}
+			if (item.isWeapon)
+			{
+				if (pStats.curWeaponID == item.weaponID)
+				{
+					pStats.curWeaMin += item.minDam;
+					pStats.curWeaMax += item.maxDam;
+				}
 			}
 			Litems.Add(item);
 			if (onItemChangedCallback != null)
@@ -44,8 +59,15 @@ public class Inventory : MonoBehaviour
 	public void Remove(Item item)
 	{
 		Litems.Remove(item);
+		if (item.isWeapon)
+		{
+			if (pStats.curWeaponID == item.weaponID)
+			{
+				pStats.curWeaMin -= item.minDam;
+				pStats.curWeaMax -= item.maxDam;
+			}
+		}
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
 	}
-
 }
