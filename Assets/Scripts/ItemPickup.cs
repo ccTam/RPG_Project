@@ -16,18 +16,16 @@ public class ItemPickup : Interactable {
 			//CoroutineController.instance.Inst[K] = StartCoroutine(PauseForPickUp(K));
 		}
 		else
-		{
 			Debug.Log("CANNOT Pick Up!");
-		}
 	}
-	
-	IEnumerator PauseForPickUp(int K)
-	{
-		yield return new WaitForSeconds(1f);
-		PickUp();
-		StopCoroutine(PauseForPickUp(K));
-		CoroutineController.instance.RevokeK(K);
-	}
+
+	//IEnumerator PauseForPickUp(int K)
+	//{
+	//	yield return new WaitForSeconds(1f);
+	//	PickUp();
+	//	StopCoroutine(PauseForPickUp(K));
+	//	CoroutineController.instance.RevokeK(K);
+	//}
 
 	void PickUp()
 	{

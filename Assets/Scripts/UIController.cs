@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour
 	[SerializeField]
 	Transform player, hpBar;
 	PlayerStats pStats;
+
 	#region Singleton
 
 	public static UIController instance;
@@ -91,7 +92,6 @@ public class UIController : MonoBehaviour
 	{
 		Update_HMSP();
 		Update_Attributes();
-
 		if (MainHPBlur.value > MainHPSlider.value)
 		{
 			if (Time.time - pStats.curlastCombatTime >= 2f || !pStats.bIsAlive)
@@ -99,7 +99,6 @@ public class UIController : MonoBehaviour
 		}
 		else
 			MainHPBlur.value = MainHPSlider.value;
-
 		hpBar = WorldCanvas.transform.Find("HP Bar");
 		hpBar.position = new Vector3(player.position.x, player.position.y + 1.7f, player.position.z);
 		hpBar.LookAt(Camera.main.transform.position);

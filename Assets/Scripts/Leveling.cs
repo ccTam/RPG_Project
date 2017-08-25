@@ -33,7 +33,7 @@ public class Leveling : MonoBehaviour
 				return i - 1;
 			}
 		}
-		return 200;
+		return MAXLEVEL;
 	}
 
 	public int GetRemainExp(int curExp, int i)

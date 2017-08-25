@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update()
 	{
+		if (EventSystem.current.IsPointerOverGameObject()) { return; }
 		if (!pStats.bCanControl)
 		{
 			return;
@@ -44,23 +45,23 @@ public class PlayerController : MonoBehaviour
 		}
 		if (Input.GetMouseButtonDown(0))
 		{
-			PointerEventData pointer = new PointerEventData(EventSystem.current);
-			pointer.position = Input.mousePosition;
+			//PointerEventData pointer = new PointerEventData(EventSystem.current);
+			//pointer.position = Input.mousePosition;
 
-			raycastResults = new List<RaycastResult>();
-			EventSystem.current.RaycastAll(pointer, raycastResults);
+			//raycastResults = new List<RaycastResult>();
+			//EventSystem.current.RaycastAll(pointer, raycastResults);
 
-			if (raycastResults.Count > 0)
-			{
-				foreach (var curObj in raycastResults)
-				{
-					if (curObj.gameObject.layer == 5)
-					{
-						//Debug.Log(curObj.gameObject.name, curObj.gameObject);
-						return;
-					}
-				}
-			}
+			//if (raycastResults.Count > 0)
+			//{
+			//	foreach (var curObj in raycastResults)
+			//	{
+			//		if (curObj.gameObject.layer == 5)
+			//		{
+			//			Debug.Log(curObj.gameObject.name, curObj.gameObject);
+			//			return;
+			//		}
+			//	}
+			//}
 			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 100, movementMask))

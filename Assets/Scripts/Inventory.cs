@@ -36,9 +36,7 @@ public class Inventory : MonoBehaviour
 			}
 			Litems.Add(item);
 			if (onItemChangedCallback != null)
-			{
 				onItemChangedCallback.Invoke();
-			}
 			return true;
 		}
 		return false;
@@ -47,9 +45,7 @@ public class Inventory : MonoBehaviour
 	{
 		Litems.Remove(item);
 		if (onItemChangedCallback != null)
-		{
 			onItemChangedCallback.Invoke();
-		}
 	}
 
 }
