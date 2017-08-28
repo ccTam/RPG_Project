@@ -74,7 +74,7 @@ public class PlayerStats : MonoBehaviour
 	public bool bIsAlive { get { return isAlive; } set { isAlive = value; } }
 	public bool bIsDeadly { get { return isDeadly; } set { isDeadly = value; } }
 	public bool bIsImmune { get { return isImmune; } set { isImmune = value; } }
-	public bool bIsStatic { get { return isStatic; } set { isStatic = value; } }
+	public bool bIsStatic { get { return isStatic; } set { isStatic = value; isImmune = isStatic; canControl = !isStatic; } }
 
 
 	#endregion //Get Set functions

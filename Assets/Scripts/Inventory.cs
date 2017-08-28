@@ -22,52 +22,69 @@ public class Inventory : MonoBehaviour
 
 	public delegate void OnItemChanged();
 	public OnItemChanged onItemChangedCallback;
-	public const int space = 20;
+	public const int SPACE = 20;
 	public List<Item> Litems = new List<Item>();
+	public int OnDragItemID = 0;
+	public int OnDragSlot = -1;
+
+	[SerializeField]
+	Item EMPTY, TEST;
 
 	private PlayerStats pStats;
 
 	private void Start()
 	{
-		pStats = PlayerStats.instance;	
+		pStats = PlayerStats.instance;
+		for (int i = 0; i < SPACE; i++)
+		{
+			Litems.Add(EMPTY);
+		}
+		if (onItemChangedCallback != null)
+			onItemChangedCallback.Invoke();
 	}
 
 	public bool Add(Item item)
 	{
 		if (!item.isDefaultItem)
 		{
-			if (Litems.Count >= space)
+			bool hasRoom = false;
+			for (int i = 0; i < SPACE; i++)
 			{
-				Debug.Log("Inventory is FULL");
-				return false;
-			}
-			if (item.isWeapon)
-			{
-				if (pStats.curWeaponID == item.weaponID)
+				if (Litems[i].ID == 0)
 				{
-					pStats.curWeaMin += item.minDam;
-					pStats.curWeaMax += item.maxDam;
+					Litems[i] = item;
+					hasRoom = true;
+					break;
 				}
 			}
-			Litems.Add(item);
+			if (!hasRoom)
+			{
+				Debug.Log("INVENTORY is FULL");
+				return false;
+			}
 			if (onItemChangedCallback != null)
 				onItemChangedCallback.Invoke();
 			return true;
 		}
 		return false;
 	}
-	public void Remove(Item item)
+	public void Remove(int slotIndex)
 	{
-		Litems.Remove(item);
-		if (item.isWeapon)
-		{
-			if (pStats.curWeaponID == item.weaponID)
-			{
-				pStats.curWeaMin -= item.minDam;
-				pStats.curWeaMax -= item.maxDam;
-			}
-		}
+		Litems[slotIndex] = EMPTY;
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
+	}
+
+	public Item GetItemByID(int ID)
+	{
+		Item[] foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Item));
+		foreach (Item resourceItem in foundItems)
+		{
+			if (resourceItem.ID == ID)
+			{
+				return resourceItem;
+			}
+		}
+		return null;
 	}
 }

@@ -4,14 +4,15 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour
 {
 	[SerializeField]
-	GameObject IFCanvas, WorldCanvas, InventoryWin, StatsWin;
+	GameObject IFCanvas, WorldCanvas, hpBar, InventoryWin, StatsWin;
 	Slider MainHPSlider, MainHPBlur, MainMPSlider, MainSPSlider, HPSlider, MPSlider, SPSlider, LvSlider;
 	Text Lv, Str, Dex, Int, Will, Luck, PA, MA, Crit, PDef, PPro, MDef, MPro, AP, APts;
 	[SerializeField]
 	private int exp = 10000;
 
-	[SerializeField]
-	Transform player, hpBar;
+	//[SerializeField]
+	//GameObject tObj;
+	//Transform player;
 	PlayerStats pStats;
 	Combat combat;
 
@@ -32,7 +33,7 @@ public class UIController : MonoBehaviour
 
 	void Start()
 	{
-		player = GameObject.FindWithTag("Player").transform;
+		//player = GameObject.FindWithTag("Player").transform;
 		//
 		pStats = PlayerStats.instance;
 		combat = Combat.instance;
@@ -84,6 +85,10 @@ public class UIController : MonoBehaviour
 		{
 			pStats.GainExp(exp);
 		}
+		if (Input.GetKeyDown(KeyCode.T))
+		{
+			Inventory.instance.Add(Inventory.instance.GetItemByID((int)Random.Range(0, 5)));
+		}
 		if (Input.GetButtonDown("Inventory"))
 			InventoryWin.SetActive(!InventoryWin.activeSelf);
 		if (Input.GetButtonDown("Stats"))
@@ -97,13 +102,19 @@ public class UIController : MonoBehaviour
 		if (MainHPBlur.value > MainHPSlider.value)
 		{
 			if (Time.time - pStats.curlastCombatTime >= 2f || !pStats.bIsAlive)
-				MainHPBlur.value = Mathf.Lerp(MainHPBlur.value, MainHPSlider.value, 1.4f * Time.deltaTime);
+				MainHPBlur.value = Mathf.Lerp(MainHPBlur.value, MainHPSlider.value, 1.3f * Time.deltaTime);
 		}
 		else
 			MainHPBlur.value = MainHPSlider.value;
-		hpBar = WorldCanvas.transform.Find("HP Bar");
-		hpBar.position = new Vector3(player.position.x, player.position.y + 1.7f, player.position.z);
-		hpBar.LookAt(Camera.main.transform.position);
+
+		//if (tObj != null)
+		//{
+		//	Destroy(tObj);
+		//}
+		//tObj = Instantiate(hpBar);
+		//tObj.transform.SetParent(WorldCanvas.transform);
+		//tObj.transform.position = new Vector3(player.position.x, player.position.y + 1.7f, player.position.z);
+		//tObj.transform.LookAt(Camera.main.transform.position);
 	}
 
 	void Update_HMSP()

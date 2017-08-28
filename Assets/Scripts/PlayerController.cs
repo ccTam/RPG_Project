@@ -72,9 +72,13 @@ public class PlayerController : MonoBehaviour
 				RemoveFocus();
 			}
 		}
+		WhenMoving(.4f,  .4f, .5f);
+	}
+
+	private void WhenMoving(float HPv, float MPv, float SPv)
+	{
 		//Slow Regen while moving
 		float mag = (transform.position - lastpos).magnitude;
-		float HPv = .4f, MPv = .4f, SPv = .5f;
 		if (mag > 0)
 			isMoving = true;
 		else
@@ -93,11 +97,12 @@ public class PlayerController : MonoBehaviour
 				pStats.curMPR_M += MPv;
 				pStats.curSPR_M += SPv;
 			}
-				
+
 		}
 		lastpos = transform.position;
 		lastMoving = isMoving;
 	}
+
 	void SetFocus(Interactable newFocus)
 	{
 		if (newFocus != focus)
