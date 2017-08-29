@@ -5,14 +5,14 @@ public class InventoryUI : MonoBehaviour
 {
 	[SerializeField]
 	private Transform itemParent;
-	Inventory inventory;
+	Inventory inv;
 	InventorySlot[] slots;
 
 	void Start()
 	{
-		inventory = Inventory.instance;
+		inv = Inventory.instance;
 		slots = itemParent.GetComponentsInChildren<InventorySlot>();
-		inventory.onItemChangedCallback += UpdateUI;
+		inv.onItemChangedCallback += UpdateUI;
 		for (int i = 0; i < slots.Length; i++)
 		{
 			slots[i].slotIndex = i;
@@ -23,16 +23,16 @@ public class InventoryUI : MonoBehaviour
 	{
 		for (int i = 0; i < slots.Length; i++)
 		{
-			if (inventory.Litems[i].ID == 0)
+			if (inv.Litems[i].ID == 0)
 				slots[i].ClearSlot();
 			else
 			{
-				slots[i].AddItem(inventory.Litems[i]);
-				slots[i].UseButton.interactable = inventory.Litems[i].IsUseable;
-				if (inventory.Litems[i].MaxStack > 1) //if stackable
+				slots[i].AddItem(inv.Litems[i]);
+				slots[i].UseButton.interactable = inv.Litems[i].IsUseable;
+				if (inv.Litems[i].MaxStack > 1) //if stackable
 				{
 					slots[i].amount.enabled = true;
-					slots[i].amount.text = inventory.SlotStack[i].ToString();
+					slots[i].amount.text = inv.SlotStack[i].ToString();
 				}
 				else
 					slots[i].amount.enabled = false;

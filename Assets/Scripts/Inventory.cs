@@ -39,35 +39,31 @@ public class Inventory : MonoBehaviour
 			SlotStack[i] = 0;
 		}
 		if (onItemChangedCallback != null)
-			onItemChangedCallback.Invoke();		
+			onItemChangedCallback.Invoke();
 	}
-	
+
 
 	public bool Add(Item item)
 	{
-		if (!item.IsDefaultItem)
+		bool hasRoom = false;
+		for (int i = 0; i < SPACE; i++)
 		{
-			bool hasRoom = false;
-			for (int i = 0; i < SPACE; i++)
+			if (Litems[i].ID == 0)
 			{
-				if (Litems[i].ID == 0)
-				{
-					Litems[i] = item;
-					SlotStack[i] = 1;
-					hasRoom = true;
-					break;
-				}
+				Litems[i] = item;
+				SlotStack[i] = 1;
+				hasRoom = true;
+				break;
 			}
-			if (!hasRoom)
-			{
-				Debug.Log("INVENTORY is FULL");
-				return false;
-			}
-			if (onItemChangedCallback != null)
-				onItemChangedCallback.Invoke();
-			return true;
 		}
-		return false;
+		if (!hasRoom)
+		{
+			Debug.Log("INVENTORY is FULL");
+			return false;
+		}
+		if (onItemChangedCallback != null)
+			onItemChangedCallback.Invoke();
+		return true;
 	}
 	public void Remove(int slotIndex)
 	{

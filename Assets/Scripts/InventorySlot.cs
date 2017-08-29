@@ -46,13 +46,13 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	}
 	public void OnRemoveButton()
 	{
-		Debug.Log("Remove(" + item.name + ")");
+		Debug.Log("Removed(" + item.name + ")");
 		inv.Remove(slotIndex);
 	}
 
 	public void UseItem()
 	{
-		if (item != null)
+		if (item != EMPTY)
 		{
 			item.Use();
 			inv.SlotStack[slotIndex]--;
@@ -104,9 +104,17 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				inv.Litems[slotIndex].MaxStack > 1 &&
 				inv.OnDragSlot != slotIndex)
 			{
-				inv.SlotStack[slotIndex] += inv.SlotStack[inv.OnDragSlot];
-				Debug.Log("1 New stacks = " + inv.SlotStack[slotIndex]);
-				inv.Remove(inv.OnDragSlot);
+				if (inv.SlotStack[slotIndex] + inv.SlotStack[inv.OnDragSlot] <= inv.Litems[slotIndex].MaxStack)
+				{
+					inv.SlotStack[slotIndex] += inv.SlotStack[inv.OnDragSlot];
+					//Debug.Log("New stack: " + inv.SlotStack[slotIndex]);
+					inv.Remove(inv.OnDragSlot);
+				}
+				else
+				{
+					inv.SlotStack[inv.OnDragSlot] -= (inv.Litems[slotIndex].MaxStack - inv.SlotStack[slotIndex]);
+					inv.SlotStack[slotIndex] = inv.Litems[slotIndex].MaxStack;
+				}
 				return;
 			}
 			Debug.Log("Swapped Item");
@@ -120,12 +128,13 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		//Debug.Log("EndDrag");
-		icon.transform.SetParent(originalParent);
-		icon.transform.position = originalParent.position + new Vector3(10f, 0);
+		Debug.Log("EndDrag");
 		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = true;
+		icon.transform.SetParent(originalParent);
+		icon.transform.position = originalParent.position + new Vector3(6.5f, 0);
 		inv.OnDragItemID = 0;
 		inv.OnDragSlot = -1;
+		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = false;
 		if (inv.onItemChangedCallback != null)
 			inv.onItemChangedCallback();
 	}
