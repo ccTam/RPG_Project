@@ -32,19 +32,20 @@ public class PlayerController : MonoBehaviour
 		{
 			return;
 		}
-		if (Input.GetMouseButtonDown(1))
-		{
-			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 100))
-			{
-				Interactable interactable = hit.collider.GetComponent<Interactable>();
-				if (interactable != null)
-				{
-					SetFocus(interactable);
-				}
-			}
-		}
+		MovingPenalty(.6f, .6f, .5f);
+		//if (Input.GetMouseButtonDown(1))
+		//{
+		//Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+		//RaycastHit hit;
+		//if (Physics.Raycast(ray, out hit, 100))
+		//{
+		//	Interactable interactable = hit.collider.GetComponent<Interactable>();
+		//	if (interactable != null)
+		//	{
+		//		SetFocus(interactable);
+		//	}
+		//}
+		//}
 		if (Input.GetMouseButtonDown(0))
 		{
 			//PointerEventData pointer = new PointerEventData(EventSystem.current);
@@ -66,16 +67,25 @@ public class PlayerController : MonoBehaviour
 			//}
 			Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 			RaycastHit hit;
+			if (Physics.Raycast(ray, out hit, 100))
+			{
+				Interactable interactable = hit.collider.GetComponent<Interactable>();
+				if (interactable != null)
+				{
+					SetFocus(interactable);
+					return;
+				}
+			}
 			if (Physics.Raycast(ray, out hit, 100, movementMask))
 			{
 				motor.MoveToPoint(hit.point);
 				RemoveFocus();
 			}
 		}
-		WhenMoving(.4f,  .4f, .5f);
+		
 	}
 
-	private void WhenMoving(float HPv, float MPv, float SPv)
+	private void MovingPenalty(float HPv, float MPv, float SPv)
 	{
 		//Slow Regen while moving
 		float mag = (transform.position - lastpos).magnitude;
@@ -87,15 +97,15 @@ public class PlayerController : MonoBehaviour
 		{
 			if (isMoving)
 			{
-				pStats.curHPR_M -= HPv;
-				pStats.curMPR_M -= MPv;
-				pStats.curSPR_M -= SPv;
+				pStats.curHPR_M -= 1 - HPv;
+				pStats.curMPR_M -= 1 - MPv;
+				pStats.curSPR_M -= 1 - SPv;
 			}
 			else
 			{
-				pStats.curHPR_M += HPv;
-				pStats.curMPR_M += MPv;
-				pStats.curSPR_M += SPv;
+				pStats.curHPR_M += 1 - HPv;
+				pStats.curMPR_M += 1 - MPv;
+				pStats.curSPR_M += 1 - SPv;
 			}
 
 		}

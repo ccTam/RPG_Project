@@ -6,7 +6,7 @@ public class UIController : MonoBehaviour
 	[SerializeField]
 	GameObject IFCanvas, WorldCanvas, hpBar, InventoryWin, StatsWin;
 	Slider MainHPSlider, MainHPBlur, MainMPSlider, MainSPSlider, HPSlider, MPSlider, SPSlider, LvSlider;
-	Text Lv, Str, Dex, Int, Will, Luck, PA, MA, Crit, PDef, PPro, MDef, MPro, AP, APts;
+	Text Lv, Str, Dex, Int, Will, Luck, PA, Balance, MA, Crit, PDef, PPro, MDef, MPro, AP, APts;
 	[SerializeField]
 	private int exp = 10000;
 
@@ -58,6 +58,7 @@ public class UIController : MonoBehaviour
 		Will = StatsWin.transform.Find("ItemsParent/BaseStats/Will/Value").GetComponent<Text>();
 		Luck = StatsWin.transform.Find("ItemsParent/BaseStats/Luck/Value").GetComponent<Text>();
 		PA = StatsWin.transform.Find("ItemsParent/BaseStats/PhysicalAttack/Value").GetComponent<Text>();
+		Balance = StatsWin.transform.Find("ItemsParent/BaseStats/Balance/Value").GetComponent<Text>();
 		MA = StatsWin.transform.Find("ItemsParent/BaseStats/MagicAttack/Value").GetComponent<Text>();
 		Crit = StatsWin.transform.Find("ItemsParent/BaseStats/Critical/Value").GetComponent<Text>();
 		PDef = StatsWin.transform.Find("ItemsParent/BaseStats/P.Def/Value").GetComponent<Text>();
@@ -71,23 +72,26 @@ public class UIController : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			combat.Dot(pStats.maxHP * .08f, 3f, 12f);
+			combat.Dot(pStats.maxHP * .08f, 2.5f, 8f);
 		}
 		if (Input.GetKeyDown(KeyCode.W))
 		{
-			combat.Dot(pStats.maxHP * .00f, 50f, 40f, 0f, 0f);
+			combat.Dot(pStats.maxHP * .00f, 50f, 60f, 0f, 0f);
 		}
 		if (Input.GetKeyDown(KeyCode.E))
 		{
-			combat.Hot(pStats.maxHP * .01f, pStats.maxMP * .01f, pStats.maxSP * .01f, .3f, 5f);
+			combat.Hot(pStats.maxHP * .02f, pStats.maxMP * .02f, pStats.maxSP * .02f, 1f, 5f);
 		}
 		if (Input.GetKey(KeyCode.R))
 		{
 			pStats.GainExp(exp);
+			
 		}
 		if (Input.GetKeyDown(KeyCode.T))
 		{
-			Inventory.instance.Add(Inventory.instance.GetItemByID((int)Random.Range(0, 5)));
+			int randomItemID = (int)Random.Range(1, 6);
+			Debug.Log("randomItemID: " + randomItemID);
+			Inventory.instance.Add(Inventory.instance.GetItemByID(randomItemID));
 		}
 		if (Input.GetButtonDown("Inventory"))
 			InventoryWin.SetActive(!InventoryWin.activeSelf);
@@ -102,7 +106,7 @@ public class UIController : MonoBehaviour
 		if (MainHPBlur.value > MainHPSlider.value)
 		{
 			if (Time.time - pStats.curlastCombatTime >= 2f || !pStats.bIsAlive)
-				MainHPBlur.value = Mathf.Lerp(MainHPBlur.value, MainHPSlider.value, 1.3f * Time.deltaTime);
+				MainHPBlur.value = Mathf.Lerp(MainHPBlur.value, MainHPSlider.value, 1.25f * Time.deltaTime);
 		}
 		else
 			MainHPBlur.value = MainHPSlider.value;
@@ -190,13 +194,15 @@ public class UIController : MonoBehaviour
 			(pStats.curPAmax + pStats.curWeaMax).ToString("0"),
 			pStats.curPAmin.ToString("0"),
 			pStats.curPAmax.ToString("0"));
+		Balance.text = string.Format("{0}%", pStats.curBalance.ToString("0"));
 		MA.text = string.Format("{0} ({1})", pStats.curMA.ToString("0"), pStats.curMA.ToString("0"));
 		Crit.text = string.Format("{0}% (+{1}%)", pStats.curCritRate.ToString("0"), pStats.curCritDam.ToString("0"));
 		PDef.text = pStats.curPDef.ToString("0");
 		PPro.text = pStats.curPPro.ToString("0");
 		MDef.text = pStats.curMDef.ToString("0");
 		MPro.text = pStats.curMPro.ToString("0");
-		AP.text = string.Format("{0} ({1})", pStats.curAP.ToString("0"), pStats.curAP.ToString("0"));
+		AP.text = string.Format("{0}", pStats.curAP.ToString("0"), pStats.curAP.ToString("0"));
+		//AP.text = string.Format("{0} ({1})", pStats.curAP.ToString("0"), pStats.curAP.ToString("0"));
 		APts.text = pStats.curAPts.ToString("0");
 	}
 }

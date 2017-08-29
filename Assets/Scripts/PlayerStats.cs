@@ -16,9 +16,10 @@ public class PlayerStats : MonoBehaviour
 	private float HPR_Multiplier, MPR_Multiplier, SPR_Multiplier;
 	[SerializeField]
 	private float Str, Dex, Int, Will, Luck;
-	private float PAmin, PAmax, MA, CritRate, CritDamage, PDef, PPro, MDef, MPro, AP;
 	[SerializeField]
-	private float WeaMin, WeaMax, WeaCrit, lastCombatTime;
+	private float PAmin, PAmax, Balance, MA, CritRate, CritDamage, PDef, PPro, MDef, MPro, APen;
+	[SerializeField]
+	private float WeaMin, WeaMax, WeaBal, WeaCrit, lastCombatTime;
 
 	[SerializeField]
 	private bool canControl, isAlive, isDeadly, isImmune, isStatic;
@@ -44,7 +45,7 @@ public class PlayerStats : MonoBehaviour
 	public float curSMPR { get { return SPR; } set { SPR = value; } }
 	public float curSPR_M { get { return SPR_Multiplier; } set { SPR_Multiplier = value; } }
 
-	public int curWeaponID { get { return weaponID; } /*set { weaponID = value; }*/ }
+	public int curWeaponID { get { return weaponID; } set { weaponID = value; } }
 	public int curExp { get { return Exp; } }
 	public int curLv { get { return Lv; } }
 	public int curRemainExp { get { return RemainExp; } }
@@ -57,6 +58,7 @@ public class PlayerStats : MonoBehaviour
 
 	public float curPAmin { get { return PAmin; } set { PAmin = value; } }
 	public float curPAmax { get { return PAmax; } set { PAmax = value; } }
+	public float curBalance { get { return Balance; } set { Balance = value; } }
 	public float curMA { get { return MA; } set { MA = value; } }
 	public float curCritRate { get { return CritRate; } set { CritRate = value; } }
 	public float curCritDam { get { return CritDamage; } set { CritDamage = value; } }
@@ -64,10 +66,11 @@ public class PlayerStats : MonoBehaviour
 	public float curPPro { get { return PPro; } set { PPro = value; } }
 	public float curMDef { get { return MDef; } set { MDef = value; } }
 	public float curMPro { get { return MPro; } set { MPro = value; } }
-	public float curAP { get { return AP; } set { AP = value; } }
+	public float curAP { get { return APen; } set { APen = value; } }
 
 	public float curWeaMin { get { return WeaMin; } set { WeaMin = value; } }
 	public float curWeaMax { get { return WeaMax; } set { WeaMax = value; } }
+	public float curWeaBal { get { return WeaBal; } set { WeaBal = value; } }
 	public float curlastCombatTime { get { return lastCombatTime; } set { lastCombatTime = value; } }
 
 	public bool bCanControl { get { return canControl; } set { canControl = value; } }
@@ -101,7 +104,7 @@ public class PlayerStats : MonoBehaviour
 		WeaMin = 0;
 		WeaMax = 0;
 		Initialize_HMSP(100, .4f, 50, .2f, 30f, 1.3f);
-		Initialize_Attributes(23, 10f, 10f, 10f, 10f, 10f, 0f, 50f);
+		Initialize_Attributes(0, 10f, 10f, 10f, 10f, 10f, 0f, 50f);
 		OnStatsChangeCallback += CalCombatStats;
 	}
 
@@ -165,7 +168,8 @@ public class PlayerStats : MonoBehaviour
 		MDef = Will / 10f;
 		MPro = Int / 20f;
 		CritRate = (Will - 10f) / 10f + (Luck - 10f) / 5f;
-		AP = (Dex - 10) / 15f;
+		APen = (Dex - 10) / 15f;
+		Balance = Mathf.Clamp(8.728944f * (Mathf.Log((Dex + 10) / 20, 2)), 0, 50) + WeaBal;
 		switch (weaponID)
 		{
 			case 0:
@@ -180,7 +184,7 @@ public class PlayerStats : MonoBehaviour
 			case 3:
 				PAmin = (Dex + Int) / 2 / 3f;
 				PAmax = (Str + Dex + Int) / 3 / 2.5f;
-				MA += cMP*.05f;
+				MA += cMP * .05f;
 				break;
 			case 4:
 				PAmin = Str / 3f + HP * .05f;

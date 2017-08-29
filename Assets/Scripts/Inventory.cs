@@ -24,28 +24,28 @@ public class Inventory : MonoBehaviour
 	public OnItemChanged onItemChangedCallback;
 	public const int SPACE = 20;
 	public List<Item> Litems = new List<Item>();
-	public int OnDragItemID = 0;
-	public int OnDragSlot = -1;
+	public int OnDragItemID = 0, OnDragSlot = -1;
+	public int[] SlotStack;
 
 	[SerializeField]
 	Item EMPTY, TEST;
 
-	private PlayerStats pStats;
-
 	private void Start()
 	{
-		pStats = PlayerStats.instance;
+		SlotStack = new int[SPACE];
 		for (int i = 0; i < SPACE; i++)
 		{
 			Litems.Add(EMPTY);
+			SlotStack[i] = 0;
 		}
 		if (onItemChangedCallback != null)
-			onItemChangedCallback.Invoke();
+			onItemChangedCallback.Invoke();		
 	}
+	
 
 	public bool Add(Item item)
 	{
-		if (!item.isDefaultItem)
+		if (!item.IsDefaultItem)
 		{
 			bool hasRoom = false;
 			for (int i = 0; i < SPACE; i++)
@@ -53,6 +53,7 @@ public class Inventory : MonoBehaviour
 				if (Litems[i].ID == 0)
 				{
 					Litems[i] = item;
+					SlotStack[i] = 1;
 					hasRoom = true;
 					break;
 				}
@@ -71,6 +72,7 @@ public class Inventory : MonoBehaviour
 	public void Remove(int slotIndex)
 	{
 		Litems[slotIndex] = EMPTY;
+		SlotStack[slotIndex] = 0;
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
 	}
@@ -79,12 +81,8 @@ public class Inventory : MonoBehaviour
 	{
 		Item[] foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Item));
 		foreach (Item resourceItem in foundItems)
-		{
 			if (resourceItem.ID == ID)
-			{
 				return resourceItem;
-			}
-		}
 		return null;
 	}
 }

@@ -10,28 +10,15 @@ public class Interactable : MonoBehaviour
 	bool isInteracting = false;
 	Transform player;
 	public bool canPickUp = true;
-	private PlayerStats pStats;
 
 	public virtual void Interact()
 	{
 		Debug.Log("INTERACTING with: " + transform.name);
-		//if (canPickUp)
-		//{
-		//	StartCoroutine(WaitforPickUp());
-		//}
-	}
-
-	IEnumerator WaitforPickUp()
-	{
-		yield return new WaitForSeconds(1f);
-		StopCoroutine(WaitforPickUp());
-		pStats.bCanControl = true;
 	}
 
 	private void Start()
 	{
 		StartCoroutine(LookForInteract());
-		pStats = PlayerStats.instance;
 	}
 
 	IEnumerator LookForInteract()

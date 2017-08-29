@@ -3,17 +3,22 @@ using System.Collections;
 
 public class UIDrag : MonoBehaviour
 {
-	private float offsetX;
-	private float offsetY;
+	private Vector2 offset;
+	private float screenX, screenY;
 
 	public void BeginDrag()
 	{
-		offsetX = transform.position.x - Input.mousePosition.x;
-		offsetY = transform.position.y - Input.mousePosition.y;
+		offset = (transform.position - Input.mousePosition);
+		screenX = Screen.width;
+		screenY = Screen.height;
 	}
 
 	public void OnDrag()
 	{
-		transform.position = new Vector3(offsetX + Input.mousePosition.x, offsetY + Input.mousePosition.y);
+		if (Input.mousePosition.x < 0 || Input.mousePosition.x > screenX || Input.mousePosition.y < 0|| Input.mousePosition.y> screenY)
+		{
+			return;
+		}
+		transform.position = new Vector3(offset.x + Input.mousePosition.x, offset.y + Input.mousePosition.y, 0);
 	}
 }

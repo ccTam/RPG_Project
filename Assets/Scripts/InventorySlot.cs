@@ -7,29 +7,33 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	[SerializeField]
 	Image icon;
 	[SerializeField]
-	Button removeButton;
+	Button useButton, removeButton;
 	[SerializeField]
 	Item EMPTY;
 	[SerializeField]
 	Item item;
+	[SerializeField]
+	public Text amount;
 	public int slotIndex;
+
+
 	[SerializeField]
 	private Transform originalParent;
 	private Vector2 offset;
-	private Vector2 imageOriginalPos;
-	private Inventory inventory;
+	private Inventory inv;
+
+	public Button UseButton { get { return useButton; } }
 
 	private void Start()
 	{
-		inventory = Inventory.instance;
+		inv = Inventory.instance;
 	}
 
 	public void AddItem(Item newItem)
 	{
 		item = newItem;
-		icon.sprite = item.icon;
+		icon.sprite = item.Icon;
 		icon.enabled = true;
-		imageOriginalPos = icon.transform.position;
 		removeButton.interactable = true;
 	}
 	public void ClearSlot()
@@ -38,11 +42,12 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		icon.sprite = null;
 		icon.enabled = false;
 		removeButton.interactable = false;
+		amount.enabled = false;
 	}
 	public void OnRemoveButton()
 	{
 		Debug.Log("Remove(" + item.name + ")");
-		inventory.Remove(slotIndex);
+		inv.Remove(slotIndex);
 	}
 
 	public void UseItem()
@@ -50,20 +55,25 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		if (item != null)
 		{
 			item.Use();
+			inv.SlotStack[slotIndex]--;
+			if (inv.SlotStack[slotIndex] == 0)
+				inv.Remove(slotIndex);
 		}
+		if (inv.onItemChangedCallback != null)
+			inv.onItemChangedCallback();
 	}
 
 	public void OnBeginDrag(PointerEventData eventData)
 	{
 		if (item != EMPTY)
 		{
-			offset = eventData.position - (Vector2)icon.transform.position;
+			//offset = eventData.position - (Vector2)icon.transform.position;
 			icon.transform.SetParent(transform.parent);
-			icon.transform.position = eventData.position - offset;
+			icon.transform.position = eventData.position /*- offset*/;
 			icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = false;
 			removeButton.interactable = false;
-			inventory.OnDragItemID = inventory.Litems[slotIndex].ID;
-			inventory.OnDragSlot = slotIndex;
+			inv.OnDragItemID = inv.Litems[slotIndex].ID;
+			inv.OnDragSlot = slotIndex;
 		}
 	}
 
@@ -75,26 +85,48 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		}
 	}
 
+	//slotIndex = Target, OnDragSlot = The slot that was dragged from, OnDragItemID = The item that was dragged
 	public void OnDrop(PointerEventData eventData)
 	{
-		Image droppedItem = eventData.pointerDrag.GetComponent<Image>();
-		if (inventory.Litems[slotIndex].ID == 0)
-			inventory.Litems[inventory.OnDragSlot] = EMPTY;
+		if (inv.OnDragSlot == -1)
+			return;
+		if (inv.Litems[slotIndex].ID == 0 && inv.OnDragSlot != slotIndex)
+		{
+			Debug.Log("Moved Item");
+			inv.SlotStack[slotIndex] = inv.SlotStack[inv.OnDragSlot];
+			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
+			inv.Remove(inv.OnDragSlot);
+		}
 		else
-			inventory.Litems[inventory.OnDragSlot] = inventory.GetItemByID(inventory.Litems[slotIndex].ID);
-		inventory.Litems[slotIndex] = inventory.GetItemByID(inventory.OnDragItemID);
+		{
+			//if item are same, can stack, amount is small than maxStack
+			if (inv.Litems[inv.OnDragSlot] == inv.Litems[slotIndex] &&
+				inv.Litems[slotIndex].MaxStack > 1 &&
+				inv.OnDragSlot != slotIndex)
+			{
+				inv.SlotStack[slotIndex] += inv.SlotStack[inv.OnDragSlot];
+				Debug.Log("1 New stacks = " + inv.SlotStack[slotIndex]);
+				inv.Remove(inv.OnDragSlot);
+				return;
+			}
+			Debug.Log("Swapped Item");
+			inv.Litems[inv.OnDragSlot] = inv.GetItemByID(inv.Litems[slotIndex].ID);
+			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
+			int tempInt = inv.SlotStack[inv.OnDragSlot];
+			inv.SlotStack[inv.OnDragSlot] = inv.SlotStack[slotIndex];
+			inv.SlotStack[slotIndex] = tempInt;
+		}
 	}
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
+		//Debug.Log("EndDrag");
 		icon.transform.SetParent(originalParent);
-		icon.transform.position = imageOriginalPos;
+		icon.transform.position = originalParent.position + new Vector3(10f, 0);
 		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = true;
-		inventory.OnDragItemID = 0;
-		inventory.OnDragSlot = -1;
-		if (inventory.onItemChangedCallback != null)
-		{
-			inventory.onItemChangedCallback();
-		}
+		inv.OnDragItemID = 0;
+		inv.OnDragSlot = -1;
+		if (inv.onItemChangedCallback != null)
+			inv.onItemChangedCallback();
 	}
 }
