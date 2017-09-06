@@ -15,6 +15,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	[SerializeField]
 	public Text amount;
 	public int slotIndex;
+	private Vector2 imageOriginalPosition;
 
 
 	[SerializeField]
@@ -27,6 +28,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	private void Start()
 	{
 		inv = Inventory.instance;
+		imageOriginalPosition = icon.transform.position;
 	}
 
 	public void AddItem(Item newItem)
@@ -41,6 +43,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		item = EMPTY;
 		icon.sprite = null;
 		icon.enabled = false;
+		useButton.interactable = false;
 		removeButton.interactable = false;
 		amount.enabled = false;
 	}
@@ -131,7 +134,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		Debug.Log("EndDrag");
 		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = true;
 		icon.transform.SetParent(originalParent);
-		icon.transform.position = originalParent.position + new Vector3(6.5f, 0);
+		icon.transform.position = imageOriginalPosition;
 		inv.OnDragItemID = 0;
 		inv.OnDragSlot = -1;
 		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = false;

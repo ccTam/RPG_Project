@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-
 	#region Singleton
 
 	public static Inventory instance;
@@ -28,7 +27,7 @@ public class Inventory : MonoBehaviour
 	public int[] SlotStack;
 
 	[SerializeField]
-	Item EMPTY, TEST;
+	Item EMPTY;
 
 	private void Start()
 	{
@@ -41,7 +40,6 @@ public class Inventory : MonoBehaviour
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
 	}
-
 
 	public bool Add(Item item)
 	{
@@ -65,6 +63,7 @@ public class Inventory : MonoBehaviour
 			onItemChangedCallback.Invoke();
 		return true;
 	}
+
 	public void Remove(int slotIndex)
 	{
 		Litems[slotIndex] = EMPTY;

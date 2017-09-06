@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CoroutineController : MonoBehaviour
+public class CoroutineManager : MonoBehaviour
 {
 	const int MAX_COROUTINE = 100;
 
-	public static CoroutineController instance;
+	public static CoroutineManager instance;
 	[SerializeField]
 	private bool[] Kbool;
 	private Coroutine[] inst;

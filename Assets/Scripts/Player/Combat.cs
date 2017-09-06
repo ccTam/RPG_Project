@@ -8,7 +8,7 @@ public class Combat : MonoBehaviour
 	[SerializeField]
 	private Transform bloodImages;
 	[SerializeField]
-	AudioSource audioSource;
+	//AudioSource audioSource;
 	PlayerStats pStats;
 
 	#region Singleton
@@ -29,7 +29,7 @@ public class Combat : MonoBehaviour
 	private void Start()
 	{
 		pStats = PlayerStats.instance;
-		audioSource = GetComponent<AudioSource>();
+		//audioSource = GetComponent<AudioSource>();
 	}
 	private void Update()
 	{
@@ -46,7 +46,7 @@ public class Combat : MonoBehaviour
 		if (!pStats.bIsImmune && pStats.bIsAlive && amount > 0)
 		{
 			if (pStats.bIsStatic) { return; }
-			audioSource.Play();
+			//audioSource.Play();
 			DrawBlood(amount);
 			if (pStats.bIsDeadly) { Death(); return; }
 			if (pStats.curHP >= pStats.maxHP * .5f && amount >= pStats.maxHP * .5f) { pStats.curHP -= amount; pStats.bIsDeadly = true; Debug.Log("Huge Damage Deadly"); return; }
@@ -89,19 +89,19 @@ public class Combat : MonoBehaviour
 		}
 	}
 	//Dot: Damage Over Time
-	public void Dot(float damage, float damInterval, float dur)
+	public void Dot(float damage, float interval, float dur)
 	{
 		if (dur == 0 || !pStats.bIsAlive) { Damage(damage, 0, 0); return; }
-		int K = CoroutineController.instance.GetK();
+		int K = CoroutineManager.instance.GetK();
 		if (K == -1) { return; }
-		CoroutineController.instance.Inst[K] = StartCoroutine(DotCounter(K, damage, 0, 0, damInterval, dur));
+		CoroutineManager.instance.Inst[K] = StartCoroutine(DotCounter(K, damage, 0, 0, interval, dur));
 	}
 	public void Dot(float damage, float mpReduce, float spReduce, float damInterval, float dur)
 	{
 		if (dur == 0 || !pStats.bIsAlive) { Damage(damage, mpReduce, spReduce); return; }
-		int K = CoroutineController.instance.GetK();
+		int K = CoroutineManager.instance.GetK();
 		if (K == -1) { return; }
-		CoroutineController.instance.Inst[K] = StartCoroutine(DotCounter(K, damage, mpReduce, spReduce, damInterval, dur));
+		CoroutineManager.instance.Inst[K] = StartCoroutine(DotCounter(K, damage, mpReduce, spReduce, damInterval, dur));
 	}
 
 	IEnumerator DotCounter(int K, float damage, float mpReduce, float spReduce, float damInterval, float dur)
@@ -115,8 +115,8 @@ public class Combat : MonoBehaviour
 				Damage(damage, mpReduce, spReduce);
 			if (--count <= 0)
 			{
-				StopCoroutine(CoroutineController.instance.Inst[K]);
-				CoroutineController.instance.RevokeK(K);
+				StopCoroutine(CoroutineManager.instance.Inst[K]);
+				CoroutineManager.instance.RevokeK(K);
 				Debug.Log((damage * dur / damInterval) + " damage taken over " + dur + "s");
 			}
 			if (pStats.bIsAlive)
@@ -126,25 +126,24 @@ public class Combat : MonoBehaviour
 		}
 	}
 	#endregion //Damage
-
 	#region //Heal
 	private void Heal(float hp, float mp, float sp)
 	{
 		if (pStats.bIsAlive)
 		{
 			pStats.curHP = Mathf.Clamp(pStats.curHP += hp, -pStats.maxHP, pStats.maxHP);
-			pStats.curMP = Mathf.Clamp(pStats.curMP += hp, 0, pStats.maxMP);
-			pStats.curSP = Mathf.Clamp(pStats.curSP += hp, 0, pStats.maxSP);
+			pStats.curMP = Mathf.Clamp(pStats.curMP += mp, 0, pStats.maxMP);
+			pStats.curSP = Mathf.Clamp(pStats.curSP += sp, 0, pStats.maxSP);
 		}
 	}
 
 	//Hot: Heal Over Time
-	public void Hot(float hp, float mp, float sp, float interva, float dur)
+	public void Hot(float hp, float mp, float sp, float interval, float dur)
 	{
 		if (dur == 0) { Heal(hp, mp, sp); return; }
-		int K = CoroutineController.instance.GetK();
+		int K = CoroutineManager.instance.GetK();
 		if (K == -1) { return; }
-		CoroutineController.instance.Inst[K] = StartCoroutine(HotCounter(K, hp, mp, sp, interva, dur));
+		CoroutineManager.instance.Inst[K] = StartCoroutine(HotCounter(K, hp, mp, sp, interval, dur));
 	}
 
 	IEnumerator HotCounter(int K, float hp, float mp, float sp, float healInterval, float dur)
@@ -158,8 +157,8 @@ public class Combat : MonoBehaviour
 				Heal(hp, mp, sp);
 			if (--count <= 0)
 			{
-				StopCoroutine(CoroutineController.instance.Inst[K]);
-				CoroutineController.instance.RevokeK(K);
+				StopCoroutine(CoroutineManager.instance.Inst[K]);
+				CoroutineManager.instance.RevokeK(K);
 				Debug.Log((hp * dur / healInterval) + " HP healed over " + dur + "s");
 			}
 			if (pStats.bIsAlive)
@@ -169,8 +168,7 @@ public class Combat : MonoBehaviour
 		}
 	}
 	#endregion //Heal
-
-	#region Death
+	#region //Death
 	private void Death()
 	{
 		if (pStats.bIsStatic) { return; }
@@ -184,9 +182,9 @@ public class Combat : MonoBehaviour
 		player.GetComponent<PlayerMotor>().MoveToPoint(player.transform.position);
 		player.GetComponentInChildren<Animator>().SetBool("Dead", true);
 
-		int K = CoroutineController.instance.GetK();
+		int K = CoroutineManager.instance.GetK();
 		if (K == -1) { return; }
-		CoroutineController.instance.Inst[K] = StartCoroutine(Reviving(K, 5f, pStats.maxHP * .1f, pStats.maxMP * .1f, pStats.maxSP * .1f));
+		CoroutineManager.instance.Inst[K] = StartCoroutine(Reviving(K, 5f, pStats.maxHP * .1f, pStats.maxMP * .1f, pStats.maxSP * .1f));
 	}
 	#endregion //Death
 	#region //Revive
@@ -213,8 +211,8 @@ public class Combat : MonoBehaviour
 		yield return new WaitForSeconds(t);
 		if (!pStats.bIsAlive)
 			Revive(hp, mp, sp);
-		StopCoroutine(CoroutineController.instance.Inst[K]);
-		CoroutineController.instance.RevokeK(K);
+		StopCoroutine(CoroutineManager.instance.Inst[K]);
+		CoroutineManager.instance.RevokeK(K);
 	}
 
 	#endregion Revive

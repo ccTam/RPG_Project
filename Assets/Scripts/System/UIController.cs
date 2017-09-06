@@ -189,7 +189,7 @@ public class UIController : MonoBehaviour
 		Will.text = string.Format("{0} ({1})", pStats.curWill.ToString("0"), pStats.curWill.ToString("0"));
 		Luck.text = string.Format("{0} ({1})", pStats.curLuck.ToString("0"), pStats.curLuck.ToString("0"));
 
-		PA.text = string.Format("{0}<color=#FFD500FF>({2})</color> ~ {1}<color=#FFD500FF>({3})</color>",
+		PA.text = string.Format("{2}<color=#FFD500FF>({0})</color> ~ {3}<color=#FFD500FF>({1})</color>",
 			(pStats.curPAmin + pStats.curWeaMin).ToString("0"),
 			(pStats.curPAmax + pStats.curWeaMax).ToString("0"),
 			pStats.curPAmin.ToString("0"),
