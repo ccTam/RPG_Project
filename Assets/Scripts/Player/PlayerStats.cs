@@ -154,13 +154,6 @@ public class PlayerStats : MonoBehaviour
 		CritDamage = critd;
 	}
 
-	#region Weapon List
-	//0 Bare Hand
-	//1 Melee
-	//2 Archery 
-	//3 Void Magic
-	//4 Dark Shield
-	#endregion Weapon List
 	private void CalCombatStats()
 	{
 		MA = (Int - 10) / 5f + cMP * .05f;
@@ -172,21 +165,21 @@ public class PlayerStats : MonoBehaviour
 		Balance = Mathf.Clamp(8.728944f * (Mathf.Log((Dex + 10) / 20, 2)), 0, 50) + WeaBal;
 		switch (weaponID)
 		{
-			case 0:
-			case 1:
+			case (int)WeaponID.None:
+			case (int)WeaponID.Melee:
 				PAmin = Str / 3f;
 				PAmax = Str / 2.5f;
 				break;
-			case 2:
+			case (int)WeaponID.Archery:
 				PAmin = Dex / 3.5f;
 				PAmax = Dex / 2.5f;
 				break;
-			case 3:
+			case (int)WeaponID.VoidMagic:
 				PAmin = (Dex + Int) / 2 / 3f;
 				PAmax = (Str + Dex + Int) / 3 / 2.5f;
 				MA += cMP * .05f;
 				break;
-			case 4:
+			case (int)WeaponID.DarkShield:
 				PAmin = Str / 3f + HP * .05f;
 				PAmax = Str / 2.5f + HP * .05f;
 				PDef = Str / 10f + HP / 15f;

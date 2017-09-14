@@ -18,12 +18,12 @@ public class EquipmentManager : MonoBehaviour {
 		instance = this;
 	}
 	#endregion
-
+	[SerializeField]
 	Equipment[] curEquipment;
 	Inventory inv;
 
-	public delegate void OnequipmentChanged(Equipment newItem, Equipment oldItem);
-	public OnequipmentChanged onequipmentChanged;
+	public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
+	public OnEquipmentChanged onEquipmentChanged;
 
 	void Start()
 	{
@@ -43,9 +43,9 @@ public class EquipmentManager : MonoBehaviour {
 			inv.Add(oldItem);
 		}
 		curEquipment[equipSlotIndex] = newItem;
-		if (onequipmentChanged != null)
+		if (onEquipmentChanged != null)
 		{
-			onequipmentChanged(newItem, oldItem);
+			onEquipmentChanged(newItem, oldItem);
 		}
 	}
 
@@ -59,17 +59,20 @@ public class EquipmentManager : MonoBehaviour {
 
 			curEquipment[equipSlotIndex] = null;
 		}
-		if (onequipmentChanged != null)
+		if (onEquipmentChanged != null)
 		{
-			onequipmentChanged(null, oldItem);
+			onEquipmentChanged(null, oldItem);
 		}
 	}
 
 	void UnequipAll()
 	{
 		for (int i = 0; i < curEquipment.Length; i++)
-		{
 			Unequip(i);
-		}
+	}
+
+	void ChangeStats(Equipment newItem, Equipment oldItem)
+	{
+
 	}
 }

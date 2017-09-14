@@ -3,8 +3,7 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-	[SerializeField]
-	private Transform itemParent;
+	public Transform itemParent;
 	Inventory inv;
 	InventorySlot[] slots;
 
@@ -23,7 +22,7 @@ public class InventoryUI : MonoBehaviour
 	{
 		for (int i = 0; i < slots.Length; i++)
 		{
-			if (inv.Litems[i].ID == 0)
+			if (inv.Litems[i] != null && inv.Litems[i].ID == 0)
 				slots[i].ClearSlot();
 			else
 			{

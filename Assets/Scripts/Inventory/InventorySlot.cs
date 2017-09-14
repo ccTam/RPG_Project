@@ -2,8 +2,7 @@
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler
-{
+public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IDropHandler{
 	[SerializeField]
 	Image icon;
 	[SerializeField]
@@ -33,6 +32,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 	public void AddItem(Item newItem)
 	{
+		if (newItem == null) {Debug.Log("**NULL ITEM**"); return; }
 		item = newItem;
 		icon.sprite = item.Icon;
 		icon.enabled = true;
@@ -95,7 +95,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 			return;
 		if (inv.Litems[slotIndex].ID == 0 && inv.OnDragSlot != slotIndex)
 		{
-			Debug.Log("Moved Item");
+			//Debug.Log("Moved Item");
 			inv.SlotStack[slotIndex] = inv.SlotStack[inv.OnDragSlot];
 			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
 			inv.Remove(inv.OnDragSlot);
@@ -120,7 +120,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				}
 				return;
 			}
-			Debug.Log("Swapped Item");
+			//Debug.Log("Swapped Item");
 			inv.Litems[inv.OnDragSlot] = inv.GetItemByID(inv.Litems[slotIndex].ID);
 			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
 			int tempInt = inv.SlotStack[inv.OnDragSlot];
@@ -131,7 +131,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
 	public void OnEndDrag(PointerEventData eventData)
 	{
-		Debug.Log("EndDrag");
+		//Debug.Log("EndDrag");
 		icon.transform.GetComponent<CanvasGroup>().blocksRaycasts = true;
 		icon.transform.SetParent(originalParent);
 		icon.transform.position = imageOriginalPosition;

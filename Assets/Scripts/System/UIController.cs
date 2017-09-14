@@ -14,7 +14,6 @@ public class UIController : MonoBehaviour
 	//GameObject tObj;
 	//Transform player;
 	PlayerStats pStats;
-	Combat combat;
 
 	#region Singleton
 
@@ -36,7 +35,6 @@ public class UIController : MonoBehaviour
 		//player = GameObject.FindWithTag("Player").transform;
 		//
 		pStats = PlayerStats.instance;
-		combat = Combat.instance;
 		InventoryWin = IFCanvas.transform.Find("Inventory").gameObject;
 		StatsWin = IFCanvas.transform.Find("Stats").gameObject;
 
@@ -70,26 +68,13 @@ public class UIController : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Q))
-		{
-			combat.Dot(pStats.maxHP * .08f, 2.5f, 8f);
-		}
-		if (Input.GetKeyDown(KeyCode.W))
-		{
-			combat.Dot(pStats.maxHP * .00f, 50f, 60f, 0f, 0f);
-		}
-		if (Input.GetKeyDown(KeyCode.E))
-		{
-			combat.Hot(pStats.maxHP * .02f, pStats.maxMP * .02f, pStats.maxSP * .02f, 1f, 5f);
-		}
 		if (Input.GetKey(KeyCode.R))
 		{
 			pStats.GainExp(exp);
-			
 		}
 		if (Input.GetKeyDown(KeyCode.T))
 		{
-			int randomItemID = (int)Random.Range(1, 6);
+			int randomItemID = (int)Random.Range(1, 7);
 			Debug.Log("randomItemID: " + randomItemID);
 			Inventory.instance.Add(Inventory.instance.GetItemByID(randomItemID));
 		}

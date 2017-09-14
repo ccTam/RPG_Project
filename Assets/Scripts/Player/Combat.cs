@@ -33,6 +33,19 @@ public class Combat : MonoBehaviour
 	}
 	private void Update()
 	{
+		if (Input.GetKeyDown(KeyCode.Q))
+		{
+			Dot(pStats.maxHP * .08f, 2.5f, 8f);
+		}
+		if (Input.GetKeyDown(KeyCode.W))
+		{
+			Dot(pStats.maxHP * .00f, 50f, 60f, 0f, 0f);
+		}
+		if (Input.GetKeyDown(KeyCode.E))
+		{
+			Hot(pStats.maxHP * .02f, pStats.maxMP * .02f, pStats.maxSP * .02f, 1f, 5f);
+		}
+
 		foreach (Transform T in bloodImages)
 		{
 			Image im = T.GetComponent<Image>();

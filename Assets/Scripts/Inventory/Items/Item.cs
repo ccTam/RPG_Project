@@ -5,7 +5,7 @@ public class Item : ScriptableObject
 {
 	new public string name = "New Item";
 	[SerializeField]
-	private int itemID = -1;
+	private int itemID = 0;
 	[SerializeField]
 	private Sprite icon = null;
 	[SerializeField]

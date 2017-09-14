@@ -82,17 +82,14 @@ public class PlayerController : MonoBehaviour
 				RemoveFocus();
 			}
 		}
-		
+
 	}
 
 	private void MovingPenalty(float HPv, float MPv, float SPv)
 	{
 		//Slow Regen while moving
 		float mag = (transform.position - lastpos).magnitude;
-		if (mag > 0)
-			isMoving = true;
-		else
-			isMoving = false;
+		isMoving = mag > 0 ? true : false;
 		if (lastMoving != isMoving)
 		{
 			if (isMoving)

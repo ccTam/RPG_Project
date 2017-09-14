@@ -46,7 +46,7 @@ public class Inventory : MonoBehaviour
 		bool hasRoom = false;
 		for (int i = 0; i < SPACE; i++)
 		{
-			if (Litems[i].ID == 0)
+			if (Litems[i]!=null && Litems[i].ID == 0)
 			{
 				Litems[i] = item;
 				SlotStack[i] = 1;
@@ -74,10 +74,23 @@ public class Inventory : MonoBehaviour
 
 	public Item GetItemByID(int ID)
 	{
-		Item[] foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Item));
+		//Item[] foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Item));
+		Item[] foundItems = Resources.LoadAll<Item>("Items/");
+		Debug.Log("LengthofFoundItems: " + foundItems.Length);
 		foreach (Item resourceItem in foundItems)
+		{
+			Debug.Log("resourceItemID: " + resourceItem.name + " (" + resourceItem.ID + ") ");
 			if (resourceItem.ID == ID)
 				return resourceItem;
+		}
+		//foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Equipment));
+		//foreach (Item resourceItem in foundItems)
+		//	if (resourceItem.ID == ID)
+		//		return resourceItem;
+		//foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Potion));
+		//foreach (Item resourceItem in foundItems)
+		//	if (resourceItem.ID == ID)
+		//		return resourceItem;
 		return null;
 	}
 }
