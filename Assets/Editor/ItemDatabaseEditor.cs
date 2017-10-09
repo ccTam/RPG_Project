@@ -184,7 +184,7 @@ public class ItemDatabaseEditor : EditorWindow
 				Equipment eqItem = (Equipment)itemDatabase.GetItem(selectedItem);
 				eqItem.Str = float.Parse(EditorGUILayout.TextField(new GUIContent("Strength: "), eqItem.Str.ToString()));
 				eqItem.Dex = float.Parse(EditorGUILayout.TextField(new GUIContent("Dexterity: "), eqItem.Dex.ToString()));
-				eqItem.Inte = float.Parse(EditorGUILayout.TextField(new GUIContent("Intelligence: "), eqItem.Dex.ToString()));
+				eqItem.Inte = float.Parse(EditorGUILayout.TextField(new GUIContent("Intelligence: "), eqItem.Inte.ToString()));
 				eqItem.Will = float.Parse(EditorGUILayout.TextField(new GUIContent("Will: "), eqItem.Will.ToString()));
 				eqItem.Luck = float.Parse(EditorGUILayout.TextField(new GUIContent("Luck: "), eqItem.Luck.ToString()));
 				eqItem.MinDam = float.Parse(EditorGUILayout.TextField(new GUIContent("Min.Damage: "), eqItem.MinDam.ToString()));
@@ -250,7 +250,7 @@ public class ItemDatabaseEditor : EditorWindow
 				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Useable: "), true));
 				str = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Strength: "), str.ToString()));
 				dex = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Dexterity: "), dex.ToString()));
-				inte = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Intelligence: "), dex.ToString()));
+				inte = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Intelligence: "), inte.ToString()));
 				will = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Will: "), will.ToString()));
 				luck = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Luck: "), luck.ToString()));
 				minDam = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Min.Damage: "), minDam.ToString()));

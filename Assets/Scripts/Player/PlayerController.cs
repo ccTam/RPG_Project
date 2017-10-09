@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 		{
 			return;
 		}
-		MovingPenalty(.6f, .6f, .5f);
+		MovingPenalty(.75f, .75f, .75f);
 		//if (Input.GetMouseButtonDown(1))
 		//{
 		//Ray ray = cam.ScreenPointToRay(Input.mousePosition);

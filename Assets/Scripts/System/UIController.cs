@@ -8,14 +8,12 @@ public class UIController : MonoBehaviour
 	GameObject IFCanvas, WorldCanvas, hpBar, InventoryWin, StatsWin;
 	Slider MainHPSlider, MainHPBlur, MainMPSlider, MainSPSlider, HPSlider, MPSlider, SPSlider, LvSlider;
 	Text Lv, Str, Dex, Int, Will, Luck, PA, Balance, MA, Crit, PDef, PPro, MDef, MPro, AP, APts;
-	[SerializeField]
-	private int exp = 10000;
+
 
 	//[SerializeField]
 	//GameObject tObj;
 	//Transform player;
 	private PlayerStats pStats;
-	private Inventory inv;
 	public Item testingItem;
 
 	#region Singleton
@@ -38,7 +36,6 @@ public class UIController : MonoBehaviour
 		//player = GameObject.FindWithTag("Player").transform;
 		//
 		pStats = PlayerStats.instance;
-		inv = Inventory.instance;
 		InventoryWin = IFCanvas.transform.Find("Inventory").gameObject;
 		StatsWin = IFCanvas.transform.Find("Stats").gameObject;
 
@@ -72,10 +69,6 @@ public class UIController : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetKey(KeyCode.R))
-		{
-			pStats.GainExp(exp);
-		}
 		if (Input.GetButtonDown("Inventory"))
 			InventoryWin.SetActive(!InventoryWin.activeSelf);
 		if (Input.GetButtonDown("Stats"))
@@ -166,20 +159,20 @@ public class UIController : MonoBehaviour
 
 	void Update_Attributes()
 	{
-		Str.text = string.Format("{0} ({1})", pStats.curStr.ToString("0"), pStats.curStr.ToString("0"));
-		Dex.text = string.Format("{0} ({1})", pStats.curDex.ToString("0"), pStats.curDex.ToString("0"));
-		Int.text = string.Format("{0} ({1})", pStats.curInt.ToString("0"), pStats.curInt.ToString("0"));
-		Will.text = string.Format("{0} ({1})", pStats.curWill.ToString("0"), pStats.curWill.ToString("0"));
-		Luck.text = string.Format("{0} ({1})", pStats.curLuck.ToString("0"), pStats.curLuck.ToString("0"));
+		Str.text = string.Format("{0} <color=#FFD500FF>({1})</color>", (pStats.curStr - pStats.curItemBasicAttributes[0]).ToString("0"), pStats.curStr.ToString("0"));
+		Dex.text = string.Format("{0} <color=#FFD500FF>({1})</color>", (pStats.curDex - pStats.curItemBasicAttributes[0]).ToString("0"), pStats.curDex.ToString("0"));
+		Int.text = string.Format("{0} <color=#FFD500FF>({1})</color>", (pStats.curInt - pStats.curItemBasicAttributes[0]).ToString("0"), pStats.curInt.ToString("0"));
+		Will.text = string.Format("{0} <color=#FFD500FF>({1})</color>", (pStats.curWill - pStats.curItemBasicAttributes[0]).ToString("0"), pStats.curWill.ToString("0"));
+		Luck.text = string.Format("{0} <color=#FFD500FF>({1})</color>", (pStats.curLuck - pStats.curItemBasicAttributes[0]).ToString("0"), pStats.curLuck.ToString("0"));
 
-		PA.text = string.Format("{2}<color=#FFD500FF>({0})</color> ~ {3}<color=#FFD500FF>({1})</color>",
-			(pStats.curPAmin + pStats.curWeaMin).ToString("0"),
-			(pStats.curPAmax + pStats.curWeaMax).ToString("0"),
+		PA.text = string.Format("{0}<color=#FFD500FF>({2})</color> ~ {1}<color=#FFD500FF>({3})</color>",
+			(pStats.curPAmin - pStats.curItemMin).ToString("0"),
+			(pStats.curPAmax - pStats.curItemMax).ToString("0"),
 			pStats.curPAmin.ToString("0"),
 			pStats.curPAmax.ToString("0"));
 		Balance.text = string.Format("{0}%", pStats.curBalance.ToString("0"));
-		MA.text = string.Format("{0} ({1})", pStats.curMA.ToString("0"), pStats.curMA.ToString("0"));
-		Crit.text = string.Format("{0}% (+{1}%)", pStats.curCritRate.ToString("0"), pStats.curCritDam.ToString("0"));
+		MA.text = string.Format("{0}", pStats.curMA.ToString("0"));
+		Crit.text = string.Format("{0}% <color=#FFB74BFF>(+{1}%)</color>", pStats.curCritRate.ToString("0"), pStats.curCritDam.ToString("0"));
 		PDef.text = pStats.curPDef.ToString("0");
 		PPro.text = pStats.curPPro.ToString("0");
 		MDef.text = pStats.curMDef.ToString("0");

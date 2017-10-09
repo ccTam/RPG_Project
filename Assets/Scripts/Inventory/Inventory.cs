@@ -38,7 +38,7 @@ public class Inventory : MonoBehaviour
 		itemDB = (ItemDatabase)Resources.Load(DATABASE_PATH, typeof(ItemDatabase));
 		//TESTING
 		if (itemDB == null) { Debug.LogWarning("itemDB is empty"); return; }
-		Debug.LogWarning("Item COUNT = " + itemDB.COUNT);
+		//Debug.LogWarning("Item COUNT = " + itemDB.COUNT);
 		//Debug.LogWarning("Item at (4) = " + itemDB.GetItem(4).Name + " ObjName: " + itemDB.GetItem(4).name);
 		//Debug.LogWarning("Item with ID(4) = " + itemDB.GetItemByID(4).Name + " ObjName: " + itemDB.GetItemByID(4).name);
 		itemName = new string[SPACE];
@@ -61,8 +61,8 @@ public class Inventory : MonoBehaviour
 			int randomID = Random.Range(1, itemDB.COUNT);
 			Debug.Log("randomItemID: " + randomID);
 			Item testingItem = itemDB.GetItemByID(randomID);
-			Debug.Log(testingItem.Name);
-			Inventory.instance.Add(testingItem);
+			//Debug.Log(testingItem.Name);
+			Add(testingItem);
 		}
 	}
 

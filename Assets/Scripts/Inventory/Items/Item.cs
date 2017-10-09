@@ -14,6 +14,7 @@ public class Item : ScriptableObject
 	[SerializeField]
 	[TextArea(3, 10)]
 	protected string tooltip = string.Empty;
+	[SerializeField]
 	protected ItemType itemType;
 
 	public int ID	{ set { itemID = value; } get { return itemID; } }

@@ -130,7 +130,7 @@ public class Combat : MonoBehaviour
 			{
 				StopCoroutine(CoroutineManager.instance.Inst[K]);
 				CoroutineManager.instance.RevokeK(K);
-				Debug.Log((damage * dur / damInterval) + " damage taken over " + dur + "s");
+				Debug.Log(string.Format("{0}/{1}/{2} damage taken over {3}s", (damage * dur / damInterval), (mpReduce * dur / damInterval), (spReduce * dur / damInterval), dur));
 			}
 			if (pStats.bIsAlive)
 				yield return new WaitForSeconds(damInterval);
@@ -172,7 +172,7 @@ public class Combat : MonoBehaviour
 			{
 				StopCoroutine(CoroutineManager.instance.Inst[K]);
 				CoroutineManager.instance.RevokeK(K);
-				Debug.Log((hp * dur / healInterval) + " HP healed over " + dur + "s");
+				Debug.Log(string.Format("{0}/{1}/{2} recovered over {3}s", (hp * dur / healInterval), (mp * dur / healInterval), (sp * dur / healInterval), dur));
 			}
 			if (pStats.bIsAlive)
 				yield return new WaitForSeconds(healInterval);

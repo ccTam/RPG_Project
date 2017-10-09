@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
-	delegate void CombatStats();
-	CombatStats OnStatsChangeCallback;
+	public delegate void CombatStats();
+	public CombatStats OnStatsChangeCallback;
 
 	private float HP, MP, SP;
 	[SerializeField]
@@ -17,9 +17,11 @@ public class PlayerStats : MonoBehaviour
 	[SerializeField]
 	private float Str, Dex, Int, Will, Luck;
 	[SerializeField]
+	private float[] ItemBasicAttributes = new float[5];
+	[SerializeField]
 	private float PAmin, PAmax, Balance, MA, CritRate, CritDamage, PDef, PPro, MDef, MPro, APen;
 	[SerializeField]
-	private float WeaMin, WeaMax, WeaBal, WeaCrit, lastCombatTime;
+	private float ItemMin, ItemMax, ItemBal, ItemCrit, ItemPDef, ItemPPro, ItemMDef, ItemMPro, lastCombatTime;
 
 	[SerializeField]
 	private bool canControl, isAlive, isDeadly, isImmune, isStatic;
@@ -28,6 +30,11 @@ public class PlayerStats : MonoBehaviour
 
 	public Leveling lving;
 	private UIController uiController;
+
+	//
+	[SerializeField]
+	private int exp = 20000;
+	//
 
 	#region //Get Set functions
 
@@ -68,9 +75,15 @@ public class PlayerStats : MonoBehaviour
 	public float curMPro { get { return MPro; } set { MPro = value; } }
 	public float curAP { get { return APen; } set { APen = value; } }
 
-	public float curWeaMin { get { return WeaMin; } set { WeaMin = value; } }
-	public float curWeaMax { get { return WeaMax; } set { WeaMax = value; } }
-	public float curWeaBal { get { return WeaBal; } set { WeaBal = value; } }
+	public float[] curItemBasicAttributes { get { return ItemBasicAttributes; } set { ItemBasicAttributes = value; } }
+	public float curItemMin { get { return ItemMin; } set { ItemMin = value; } }
+	public float curItemMax { get { return ItemMax; } set { ItemMax = value; } }
+	public float curItemBal { get { return ItemBal; } set { ItemBal = value; } }
+	public float curItemCrit { get { return ItemCrit; } set { ItemCrit = value; } }
+	public float curItemPDef { get { return ItemPDef; } set { ItemPDef = value; } }
+	public float curItemPPro { get { return ItemPPro; } set { ItemPPro = value; } }
+	public float curItemMDef { get { return ItemMDef; } set { ItemMDef = value; } }
+	public float curItemMPro { get { return ItemMPro; } set { ItemMPro = value; } }
 	public float curlastCombatTime { get { return lastCombatTime; } set { lastCombatTime = value; } }
 
 	public bool bCanControl { get { return canControl; } set { canControl = value; } }
@@ -101,11 +114,13 @@ public class PlayerStats : MonoBehaviour
 		lving = GetComponent<Leveling>();
 		uiController = UIController.instance;
 		weaponID = 0;
-		WeaMin = 0;
-		WeaMax = 0;
-		Initialize_HMSP(100, .4f, 50, .2f, 30f, 1.3f);
+		ItemMin = 0;
+		ItemMax = 0;
+		Initialize_HMSP(100, .4f, 50, .25f, 50f, 1.9f);
 		Initialize_Attributes(0, 10f, 10f, 10f, 10f, 10f, 0f, 50f);
 		OnStatsChangeCallback += CalCombatStats;
+		if (OnStatsChangeCallback != null)
+			OnStatsChangeCallback.Invoke();
 	}
 
 	void Update()
@@ -113,8 +128,10 @@ public class PlayerStats : MonoBehaviour
 		if (isAlive && !isStatic)
 		{
 			UnitRegen();
-			if (OnStatsChangeCallback != null)
-				OnStatsChangeCallback.Invoke();
+		}
+		if (Input.GetKey(KeyCode.R))
+		{
+			GainExp(exp);
 		}
 	}
 
@@ -158,11 +175,12 @@ public class PlayerStats : MonoBehaviour
 	{
 		MA = (Int - 10) / 5f + cMP * .05f;
 		PDef = Str / 10f;
+		PPro = 0;
 		MDef = Will / 10f;
 		MPro = Int / 20f;
-		CritRate = (Will - 10f) / 10f + (Luck - 10f) / 5f;
+		CritRate = (Will - 10f) / 15f + (Luck - 10f) / 5f;
 		APen = (Dex - 10) / 15f;
-		Balance = Mathf.Clamp(8.728944f * (Mathf.Log((Dex + 10) / 20, 2)), 0, 50) + WeaBal;
+		Balance = Mathf.Clamp(8.728944f * (Mathf.Log((Dex + 10) / 20, 2)), 0, 50);
 		switch (weaponID)
 		{
 			case (int)WeaponType.None:
@@ -185,6 +203,14 @@ public class PlayerStats : MonoBehaviour
 				PDef = Str / 10f + HP / 15f;
 				break;
 		}
+		PAmin += ItemMin;
+		PAmax += ItemMax;
+		Balance += ItemBal;
+		CritRate += ItemCrit;
+		PDef += ItemPDef;
+		PPro += ItemPPro;
+		MDef += ItemMDef;
+		MPro += ItemMPro;
 	}
 
 	private void UnitRegen()
@@ -247,6 +273,9 @@ public class PlayerStats : MonoBehaviour
 		Int += change * .5f;
 		Will += change * .6f;
 		Luck += change * .5f;
+
+		if (OnStatsChangeCallback != null)
+			OnStatsChangeCallback.Invoke();
 	}
 	#endregion //Exp
 }
