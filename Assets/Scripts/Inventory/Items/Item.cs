@@ -3,29 +3,50 @@
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class Item : ScriptableObject
 {
-	new public string name = "New Item";
 	[SerializeField]
-	private int itemID = 0;
+	protected string _name = string.Empty;
 	[SerializeField]
-	private Sprite icon = null;
+	protected int itemID = 0, maxStack = 0;
 	[SerializeField]
-	private bool isDefaultItem = false, isUseable = false;
+	protected Sprite icon = null;
 	[SerializeField]
-	private int maxStack = 0;
+	protected bool isDefaultItem = false, isUseable = false;
 	[SerializeField]
 	[TextArea(3, 10)]
-	private string tooltip = "Tooltip MISSING!";
+	protected string tooltip = string.Empty;
+	protected ItemType itemType;
 
-	public int ID { get { return itemID; } }
-	public int MaxStack { get { return maxStack; } }
+	public int ID	{ set { itemID = value; } get { return itemID; } }
+	public int MaxStack { set { maxStack = value; } get { return maxStack; } }
 
-	public bool IsDefaultItem { get { return isDefaultItem; } }
-	public bool IsUseable { get { return isUseable; } }
+	public Sprite Icon { set { icon = value; } get { return icon; } }
 
-	public Sprite Icon { get { return icon; } }
+	public bool IsDefaultItem { set { isDefaultItem = value; } get { return isDefaultItem; } }
+	public bool IsUseable { set { isUseable = value; } get { return isUseable; } }
+
+	public string Name { get { return _name; } set { _name = value; } }
+	public string Tooltip { get { return tooltip; } set { tooltip = value; } }
+	public ItemType ItemType { get { return itemType; } }
+
+	protected Item() { }
+
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip)
+	{
+		this.itemID = ID;
+		this.itemType = ItemType.BASIC;
+		this._name = name;
+		this.name = "I" + name;
+		this.icon = icon;
+		this.isDefaultItem = isDefaultItem;
+		this.isUseable = IsUseable;
+		this.maxStack = maxStack;
+		this.tooltip = tooltip;
+	}
 
 	public virtual void Use()
 	{
-		Debug.Log("Used(" + name + ")");
+		Debug.Log("Used(" + _name + ")");
 	}
+
 }
+public enum ItemType { BASIC, CONSUMABLE, EQUIPMENT }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Inventory : MonoBehaviour
 {
@@ -26,19 +27,43 @@ public class Inventory : MonoBehaviour
 	public int OnDragItemID = 0, OnDragSlot = -1;
 	public int[] SlotStack;
 
-	[SerializeField]
-	Item EMPTY;
+	public ItemDatabase itemDB;
+	public string[] itemName;
+	private const string DATABASE_PATH = @"Database/ItemDatabase";
 
 	private void Start()
 	{
+		//itemJsonString = File.ReadAllText(Application.dataPath + "/Resources/Items.json");
+		//Debug.Log(itemJsonString);
+		itemDB = (ItemDatabase)Resources.Load(DATABASE_PATH, typeof(ItemDatabase));
+		//TESTING
+		if (itemDB == null) { Debug.LogWarning("itemDB is empty"); return; }
+		Debug.LogWarning("Item COUNT = " + itemDB.COUNT);
+		//Debug.LogWarning("Item at (4) = " + itemDB.GetItem(4).Name + " ObjName: " + itemDB.GetItem(4).name);
+		//Debug.LogWarning("Item with ID(4) = " + itemDB.GetItemByID(4).Name + " ObjName: " + itemDB.GetItemByID(4).name);
+		itemName = new string[SPACE];
+		//EO TESTING
 		SlotStack = new int[SPACE];
 		for (int i = 0; i < SPACE; i++)
 		{
-			Litems.Add(EMPTY);
+			Litems.Add(itemDB.GetItemByID(0));
 			SlotStack[i] = 0;
 		}
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
+	}
+
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.T))
+		{
+			//Debug.Log("itemDB.COUNT: " + itemDB.COUNT);
+			int randomID = Random.Range(1, itemDB.COUNT);
+			Debug.Log("randomItemID: " + randomID);
+			Item testingItem = itemDB.GetItemByID(randomID);
+			Debug.Log(testingItem.Name);
+			Inventory.instance.Add(testingItem);
+		}
 	}
 
 	public bool Add(Item item)
@@ -46,8 +71,9 @@ public class Inventory : MonoBehaviour
 		bool hasRoom = false;
 		for (int i = 0; i < SPACE; i++)
 		{
-			if (Litems[i]!=null && Litems[i].ID == 0)
+			if (Litems[i] != null && Litems[i].ID == 0)
 			{
+				Debug.Log(string.Format("Adding \"{2}\" at itemSlot-{0} ID: {1}", i, Litems[i].ID, item.Name));
 				Litems[i] = item;
 				SlotStack[i] = 1;
 				hasRoom = true;
@@ -56,7 +82,7 @@ public class Inventory : MonoBehaviour
 		}
 		if (!hasRoom)
 		{
-			Debug.Log("INVENTORY is FULL");
+			Debug.LogWarning("INVENTORY is FULL");
 			return false;
 		}
 		if (onItemChangedCallback != null)
@@ -66,31 +92,10 @@ public class Inventory : MonoBehaviour
 
 	public void Remove(int slotIndex)
 	{
-		Litems[slotIndex] = EMPTY;
+		Litems[slotIndex] = itemDB.GetItemByID(0);
 		SlotStack[slotIndex] = 0;
 		if (onItemChangedCallback != null)
 			onItemChangedCallback.Invoke();
 	}
 
-	public Item GetItemByID(int ID)
-	{
-		//Item[] foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Item));
-		Item[] foundItems = Resources.LoadAll<Item>("Items/");
-		Debug.Log("LengthofFoundItems: " + foundItems.Length);
-		foreach (Item resourceItem in foundItems)
-		{
-			Debug.Log("resourceItemID: " + resourceItem.name + " (" + resourceItem.ID + ") ");
-			if (resourceItem.ID == ID)
-				return resourceItem;
-		}
-		//foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Equipment));
-		//foreach (Item resourceItem in foundItems)
-		//	if (resourceItem.ID == ID)
-		//		return resourceItem;
-		//foundItems = (Item[])Resources.FindObjectsOfTypeAll(typeof(Potion));
-		//foreach (Item resourceItem in foundItems)
-		//	if (resourceItem.ID == ID)
-		//		return resourceItem;
-		return null;
-	}
 }

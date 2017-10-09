@@ -165,21 +165,21 @@ public class PlayerStats : MonoBehaviour
 		Balance = Mathf.Clamp(8.728944f * (Mathf.Log((Dex + 10) / 20, 2)), 0, 50) + WeaBal;
 		switch (weaponID)
 		{
-			case (int)WeaponID.None:
-			case (int)WeaponID.Melee:
+			case (int)WeaponType.None:
+			case (int)WeaponType.Melee:
 				PAmin = Str / 3f;
 				PAmax = Str / 2.5f;
 				break;
-			case (int)WeaponID.Archery:
+			case (int)WeaponType.Archery:
 				PAmin = Dex / 3.5f;
 				PAmax = Dex / 2.5f;
 				break;
-			case (int)WeaponID.VoidMagic:
+			case (int)WeaponType.VoidMagic:
 				PAmin = (Dex + Int) / 2 / 3f;
 				PAmax = (Str + Dex + Int) / 3 / 2.5f;
 				MA += cMP * .05f;
 				break;
-			case (int)WeaponID.DarkShield:
+			case (int)WeaponType.DarkShield:
 				PAmin = Str / 3f + HP * .05f;
 				PAmax = Str / 2.5f + HP * .05f;
 				PDef = Str / 10f + HP / 15f;

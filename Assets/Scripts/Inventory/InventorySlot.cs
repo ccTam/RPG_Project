@@ -6,7 +6,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	[SerializeField]
 	Image icon;
 	[SerializeField]
-	Button useButton, removeButton;
+	Button useButton = null, removeButton = null;
 	[SerializeField]
 	Item EMPTY;
 	[SerializeField]
@@ -21,18 +21,21 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 	private Transform originalParent;
 	private Vector2 offset;
 	private Inventory inv;
+	private ItemDatabase itemDB;
 
 	public Button UseButton { get { return useButton; } }
 
 	private void Start()
 	{
 		inv = Inventory.instance;
+		itemDB = inv.itemDB;
 		imageOriginalPosition = icon.transform.position;
+		EMPTY = itemDB.GetItemByID(0);
 	}
 
 	public void AddItem(Item newItem)
 	{
-		if (newItem == null) {Debug.Log("**NULL ITEM**"); return; }
+		if (newItem == null) {Debug.LogWarning("**NULL ITEM**"); return; }
 		item = newItem;
 		icon.sprite = item.Icon;
 		icon.enabled = true;
@@ -97,7 +100,7 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 		{
 			//Debug.Log("Moved Item");
 			inv.SlotStack[slotIndex] = inv.SlotStack[inv.OnDragSlot];
-			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
+			inv.Litems[slotIndex] = itemDB.GetItemByID(inv.OnDragItemID);
 			inv.Remove(inv.OnDragSlot);
 		}
 		else
@@ -121,8 +124,8 @@ public class InventorySlot : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 				return;
 			}
 			//Debug.Log("Swapped Item");
-			inv.Litems[inv.OnDragSlot] = inv.GetItemByID(inv.Litems[slotIndex].ID);
-			inv.Litems[slotIndex] = inv.GetItemByID(inv.OnDragItemID);
+			inv.Litems[inv.OnDragSlot] = itemDB.GetItemByID(inv.Litems[slotIndex].ID);
+			inv.Litems[slotIndex] = itemDB.GetItemByID(inv.OnDragItemID);
 			int tempInt = inv.SlotStack[inv.OnDragSlot];
 			inv.SlotStack[inv.OnDragSlot] = inv.SlotStack[slotIndex];
 			inv.SlotStack[slotIndex] = tempInt;

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEditor;
 
 public class UIController : MonoBehaviour
 {
@@ -13,7 +14,9 @@ public class UIController : MonoBehaviour
 	//[SerializeField]
 	//GameObject tObj;
 	//Transform player;
-	PlayerStats pStats;
+	private PlayerStats pStats;
+	private Inventory inv;
+	public Item testingItem;
 
 	#region Singleton
 
@@ -35,6 +38,7 @@ public class UIController : MonoBehaviour
 		//player = GameObject.FindWithTag("Player").transform;
 		//
 		pStats = PlayerStats.instance;
+		inv = Inventory.instance;
 		InventoryWin = IFCanvas.transform.Find("Inventory").gameObject;
 		StatsWin = IFCanvas.transform.Find("Stats").gameObject;
 
@@ -71,12 +75,6 @@ public class UIController : MonoBehaviour
 		if (Input.GetKey(KeyCode.R))
 		{
 			pStats.GainExp(exp);
-		}
-		if (Input.GetKeyDown(KeyCode.T))
-		{
-			int randomItemID = (int)Random.Range(1, 7);
-			Debug.Log("randomItemID: " + randomItemID);
-			Inventory.instance.Add(Inventory.instance.GetItemByID(randomItemID));
 		}
 		if (Input.GetButtonDown("Inventory"))
 			InventoryWin.SetActive(!InventoryWin.activeSelf);
