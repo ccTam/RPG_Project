@@ -6,7 +6,7 @@ public class HealingZone : MonoBehaviour
 	PlayerStats pStats;
 
 	[SerializeField]
-	float interval = 2f, recoverRate = .02f, t;
+	float recoverSp = 2f, recoverRate = .03f, t;
 	void Start()
 	{
 		pStats = PlayerStats.instance;
@@ -22,10 +22,10 @@ public class HealingZone : MonoBehaviour
 	}
 	private void OnTriggerStay(Collider other)
 	{
-		if (t >= interval)
+		if (t >= recoverSp)
 		{
 			if (pStats.bIsAlive)
-				Combat.instance.Hot(pStats.maxHP * recoverRate, pStats.maxMP * recoverRate, pStats.maxSP * recoverRate, 0f, 0f);
+				Combat.instance.Hot(pStats.HP.FinalValue * recoverRate, pStats.MP.FinalValue * recoverRate, pStats.SP.FinalValue * recoverRate, 0f, 0f);
 			t = 0;
 		}
 		t += Time.fixedDeltaTime;

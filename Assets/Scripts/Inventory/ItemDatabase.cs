@@ -120,7 +120,7 @@ public class ItemDatabase : ScriptableObject
 
 	public Consumable GetConsumableByID(int id)
 	{
-		for (int i = 0; i < database.Count; i++)
+		for (int i = 0; i < database.Count; i++) 
 		{
 			if (database[i].ID == id)
 			{

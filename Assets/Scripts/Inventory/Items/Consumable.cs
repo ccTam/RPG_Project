@@ -18,7 +18,7 @@ public class Consumable : Item
 		Combat.instance.Hot(hp * interval / dur, mp * interval / dur, sp * interval / dur, interval, dur);
 	}
 
-	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip, float hp, float mp, float sp, float dur)
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip, int goldValue, float hp, float mp, float sp, float dur)
 	{
 		this.itemID = ID;
 		this.itemType = ItemType.CONSUMABLE;
@@ -33,5 +33,7 @@ public class Consumable : Item
 		this.mp = mp;
 		this.sp = sp;
 		this.dur = dur;
+		this.goldValue = goldValue;
+		this.resellValue = (int)(this.goldValue * .1f);
 	}
 }

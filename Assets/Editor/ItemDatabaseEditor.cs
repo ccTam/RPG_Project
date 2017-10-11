@@ -12,7 +12,7 @@ public class ItemDatabaseEditor : EditorWindow
 	private ItemType itemType;
 	private WeaponType weaponType;
 	private EquipSlot equipType;
-	private int selectedItem = 0, itemMaxStack = 0, nextID = 0;
+	private int selectedItem = 0, itemMaxStack = 0, nextID = 0, goldValue = 0, resellValue = 0;
 	private string itemName, itemTooltip;
 	private float str = 0, dex = 0, inte = 0, will = 0, luck = 0,
 				minDam = 0, maxDam = 0, bal = 0, crit = 0,
@@ -164,6 +164,8 @@ public class ItemDatabaseEditor : EditorWindow
 		itemDatabase.GetItem(selectedItem).Icon = (Sprite)EditorGUILayout.ObjectField(new GUIContent("Sprite: "), itemDatabase.GetItem(selectedItem).Icon, typeof(Sprite), true);
 		itemDatabase.GetItem(selectedItem).Name = EditorGUILayout.TextField(new GUIContent("Name: "), itemDatabase.GetItem(selectedItem).Name);
 		itemDatabase.GetItem(selectedItem).MaxStack = int.Parse(EditorGUILayout.TextField(new GUIContent("Max Stack: "), itemDatabase.GetItem(selectedItem).MaxStack.ToString()));
+		itemDatabase.GetItem(selectedItem).GoldValue = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Gold Value: "), itemDatabase.GetItem(selectedItem).GoldValue.ToString()));
+		itemDatabase.GetItem(selectedItem).ResellValue = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Resell Value: "), itemDatabase.GetItem(selectedItem).ResellValue.ToString()));
 		itemDatabase.GetItem(selectedItem).IsDefaultItem = EditorGUILayout.Toggle(new GUIContent("Default: "), itemDatabase.GetItem(selectedItem).IsDefaultItem);
 
 		switch (itemDatabase.GetItem(selectedItem).ItemType)
@@ -190,7 +192,7 @@ public class ItemDatabaseEditor : EditorWindow
 				eqItem.MinDam = float.Parse(EditorGUILayout.TextField(new GUIContent("Min.Damage: "), eqItem.MinDam.ToString()));
 				eqItem.MaxDam = float.Parse(EditorGUILayout.TextField(new GUIContent("Max.Damage: "), eqItem.MaxDam.ToString()));
 				eqItem.Bal = float.Parse(EditorGUILayout.TextField(new GUIContent("Balance: "), eqItem.Bal.ToString()));
-				eqItem.Crit = float.Parse(EditorGUILayout.TextField(new GUIContent("Critical: "), eqItem.Crit.ToString()));
+				eqItem.CritR = float.Parse(EditorGUILayout.TextField(new GUIContent("Critical: "), eqItem.CritR.ToString()));
 				eqItem.PDef = float.Parse(EditorGUILayout.TextField(new GUIContent("P.Defense: "), eqItem.PDef.ToString()));
 				eqItem.PPro = float.Parse(EditorGUILayout.TextField(new GUIContent("P.Protection: "), eqItem.PPro.ToString()));
 				eqItem.MDef = float.Parse(EditorGUILayout.TextField(new GUIContent("M.Defense: "), eqItem.MDef.ToString()));
@@ -229,6 +231,7 @@ public class ItemDatabaseEditor : EditorWindow
 		itemSprite = (Sprite)EditorGUILayout.ObjectField(new GUIContent("Sprite: "), itemSprite, typeof(Sprite), true);
 		itemName = EditorGUILayout.TextField(new GUIContent("Name: "), itemName);
 		itemMaxStack = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Max Stack: "), itemMaxStack.ToString()));
+		goldValue = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Gold Value: "), goldValue.ToString()));
 		isDefaultItem = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Default: "), isDefaultItem));
 
 		switch (itemType)
@@ -279,7 +282,7 @@ public class ItemDatabaseEditor : EditorWindow
 				case ItemType.BASIC:
 					{
 						Item newItem = (Item)CreateInstance(typeof(Item));
-						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip);
+						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip, goldValue);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
 					}
@@ -287,7 +290,7 @@ public class ItemDatabaseEditor : EditorWindow
 				case ItemType.CONSUMABLE:
 					{
 						Consumable newItem = (Consumable)CreateInstance(typeof(Consumable));
-						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip, hp, mp, sp, dur);
+						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip, goldValue, hp, mp, sp, dur);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
 					}
@@ -295,7 +298,7 @@ public class ItemDatabaseEditor : EditorWindow
 				case ItemType.EQUIPMENT:
 					{
 						Equipment newItem = (Equipment)CreateInstance(typeof(Equipment));
-						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, equipType, weaponType, isUseable, itemMaxStack, itemTooltip, str, dex, inte, will, luck, minDam, maxDam, bal, crit, pDef, pPro, mDef, mPro);
+						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, equipType, weaponType, isUseable, itemMaxStack, itemTooltip, goldValue, str, dex, inte, will, luck, minDam, maxDam, bal, crit, pDef, pPro, mDef, mPro);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
 					}
@@ -309,7 +312,7 @@ public class ItemDatabaseEditor : EditorWindow
 			itemMaxStack = 0;
 			str = 0; dex = 0; inte = 0; will = 0; luck = 0;
 			minDam = 0; maxDam = 0; bal = 0; crit = 0; pDef = 0; pPro = 0; mDef = 0; mPro = 0;
-			hp = 0; mp = 0; sp = 0; dur = 0;
+			hp = 0; mp = 0; sp = 0; dur = 0; goldValue = 0; resellValue = 0;
 			isDefaultItem = false;
 			isUseable = false;
 			itemTooltip = "Tooltip MISSING!";

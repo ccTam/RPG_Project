@@ -73,7 +73,7 @@ public class Inventory : MonoBehaviour
 		{
 			if (Litems[i] != null && Litems[i].ID == 0)
 			{
-				Debug.Log(string.Format("Adding \"{2}\" at itemSlot-{0} ID: {1}", i, Litems[i].ID, item.Name));
+				Debug.Log(string.Format("Adding \"{2}\" at itemSlot {0} ID: {1}", i, Litems[i].ID, item.Name));
 				Litems[i] = item;
 				SlotStack[i] = 1;
 				hasRoom = true;

@@ -94,15 +94,15 @@ public class PlayerController : MonoBehaviour
 		{
 			if (isMoving)
 			{
-				pStats.curHPR_M -= 1 - HPv;
-				pStats.curMPR_M -= 1 - MPv;
-				pStats.curSPR_M -= 1 - SPv;
+				pStats.HPR_Multiplier.DebuffValue += HPv;
+				pStats.MPR_Multiplier.DebuffValue += MPv;
+				pStats.SPR_Multiplier.DebuffValue += SPv;
 			}
 			else
 			{
-				pStats.curHPR_M += 1 - HPv;
-				pStats.curMPR_M += 1 - MPv;
-				pStats.curSPR_M += 1 - SPv;
+				pStats.HPR_Multiplier.DebuffValue -= HPv;
+				pStats.MPR_Multiplier.DebuffValue -= MPv;
+				pStats.SPR_Multiplier.DebuffValue -= SPv;
 			}
 
 		}

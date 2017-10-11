@@ -10,7 +10,7 @@ public class Equipment : Item
 	private WeaponType weaponID;
 	[SerializeField]
 	private float str = 0, dex = 0, inte = 0, will = 0, luck = 0,
-					minDam = 0, maxDam = 0, bal = 0, crit = 0,
+					minDam = 0, maxDam = 0, bal = 0, critr = 0, critd = 0,
 					pDef = 0, pPro = 0, mDef = 0, mPro = 0;	
 
 	public int WeaponID { get { return (int)weaponID; } }
@@ -24,7 +24,8 @@ public class Equipment : Item
 	public float MinDam { get { return minDam; } set { minDam = value; } }
 	public float MaxDam { get { return maxDam; } set { maxDam = value; } }
 	public float Bal { get { return bal; } set { bal = value; } }
-	public float Crit { get { return crit; } set { crit = value; } }
+	public float CritR { get { return critr; } set { critr = value; } }
+	public float CritD { get { return critd; } set { critd = value; } }
 
 	public float PDef { get { return pDef; } set { pDef = value; } }
 	public float PPro { get { return pPro; } set { pPro = value; } }
@@ -37,7 +38,7 @@ public class Equipment : Item
 		EquipmentManager.instance.Equip(this);
 	}
 
-	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, EquipSlot equipSlot, WeaponType weaponID, bool isUseable, int maxStack, string tooltip, float str, float dex, float inte, float will, float luck, float minDam, float maxDam, float bal, float crit, float pDef, float pPro, float mDef, float mPro)
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, EquipSlot equipSlot, WeaponType weaponID, bool isUseable, int maxStack, string tooltip, int goldValue, float str, float dex, float inte, float will, float luck, float minDam, float maxDam, float bal, float crit, float pDef, float pPro, float mDef, float mPro)
 	{
 		this.itemID = ID;
 		this.itemType = ItemType.EQUIPMENT;
@@ -58,11 +59,13 @@ public class Equipment : Item
 		this.minDam = minDam;
 		this.maxDam = maxDam;
 		this.bal = bal;
-		this.crit = crit;
+		this.critr = crit;
 		this.pDef = pDef;
 		this.pPro = pPro;
 		this.mDef = mDef;
 		this.mPro = mPro;
+		this.goldValue = goldValue;
+		this.resellValue = (int)(this.goldValue * .1f);
 	}
 }
 public enum EquipSlot { Head, Chest, Legs, Feet, Weapon, OffHand }

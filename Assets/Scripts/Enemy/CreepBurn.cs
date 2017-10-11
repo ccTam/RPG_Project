@@ -2,7 +2,7 @@
 
 public class CreepBurn : MonoBehaviour
 {
-	float damInterval = 1.5f, t;
+	float damInterval = .75f, t;
 
 
 	private void OnTriggerEnter(Collider other)
@@ -17,8 +17,8 @@ public class CreepBurn : MonoBehaviour
 	{
 		if (t >= damInterval)
 		{
-			float percentBurn = .05f;
-			Combat.instance.Dot(PlayerStats.instance.maxHP * percentBurn, PlayerStats.instance.maxMP * percentBurn, PlayerStats.instance.maxSP * percentBurn, 0f, 0f);
+			float percentBurn = .08f;
+			Combat.instance.Dot(PlayerStats.instance.HP.FinalValue * percentBurn, PlayerStats.instance.MP.FinalValue * percentBurn, PlayerStats.instance.SP.FinalValue * percentBurn, 0f, 0f);
 			t = 0;
 		}
 		t += Time.fixedDeltaTime;

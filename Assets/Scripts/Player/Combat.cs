@@ -35,15 +35,15 @@ public class Combat : MonoBehaviour
 	{
 		if (Input.GetKeyDown(KeyCode.Q))
 		{
-			Dot(pStats.maxHP * .08f, 2.5f, 8f);
+			Dot(pStats.HP.FinalValue * .08f, 2.5f, 8f);
 		}
 		if (Input.GetKeyDown(KeyCode.W))
 		{
-			Dot(pStats.maxHP * .00f, 50f, 60f, 0f, 0f);
+			Dot(20f, 50f, 60f, 0f, 0f);
 		}
 		if (Input.GetKeyDown(KeyCode.E))
 		{
-			Hot(pStats.maxHP * .02f, pStats.maxMP * .02f, pStats.maxSP * .02f, 1f, 5f);
+			Hot(pStats.HP.FinalValue * .02f, pStats.MP.FinalValue * .02f, pStats.SP.FinalValue * .02f, 1f, 5f);
 		}
 
 		foreach (Transform T in bloodImages)
@@ -58,15 +58,18 @@ public class Combat : MonoBehaviour
 		pStats.curlastCombatTime = Time.time;
 		if (!pStats.bIsImmune && pStats.bIsAlive && amount > 0)
 		{
+			amount = Mathf.Clamp((amount - pStats.PDef.CurValue) * (1 - pStats.PPro.CurValue * .01f), 1f, Mathf.Infinity);
+			Debug.Log("Actually Damage: " + amount);
 			if (pStats.bIsStatic) { return; }
+			//Play hurt sound
 			//audioSource.Play();
 			DrawBlood(amount);
 			if (pStats.bIsDeadly) { Death(); return; }
-			if (pStats.curHP >= pStats.maxHP * .5f && amount >= pStats.maxHP * .5f) { pStats.curHP -= amount; pStats.bIsDeadly = true; Debug.Log("Huge Damage Deadly"); return; }
-			pStats.curHP -= amount;
-			if (pStats.curHP <= 0)
+			if (pStats.HP.CurValue >= pStats.HP.FinalValue * .5f && amount >= pStats.HP.FinalValue * .5f) { pStats.HP.CurValue -= amount; pStats.bIsDeadly = true; Debug.Log("Huge Damage Deadly"); return; }
+			pStats.HP.CurValue -= amount;
+			if (pStats.HP.CurValue <= 0)
 			{
-				if (Random.Range(0, 100) <= (30 + (pStats.curWill + pStats.curLuck - 20) * .07)) { pStats.bIsDeadly = true; Debug.Log("Lucky Deadly: " + (30 + (pStats.curWill + pStats.curLuck - 20) * .07)); return; }
+				if (Random.Range(0, 100) <= (30 + (pStats.Will.FinalValue + pStats.Luck.FinalValue - 20) * .07)) { pStats.bIsDeadly = true; Debug.Log("Lucky Deadly: " + (30 + (pStats.Will.FinalValue + pStats.Luck.FinalValue- 20) * .07)); return; }
 				Death();
 			}
 		}
@@ -76,14 +79,14 @@ public class Combat : MonoBehaviour
 	{
 		if (!pStats.bIsImmune && pStats.bIsAlive)
 		{
-			if (pStats.curMP < mpReduce)
+			if (pStats.MP.CurValue < mpReduce)
 			{
-				Damage((mpReduce - pStats.curMP) / 2);
-				pStats.curMP = 0;
+				Damage((mpReduce - pStats.MP.CurValue) / 2);
+				pStats.MP.CurValue = 0;
 			}
 			else
-				pStats.curMP -= mpReduce;
-			pStats.curSP -= spReduce;
+				pStats.MP.CurValue -= mpReduce;
+			pStats.SP.CurValue -= spReduce;
 		}
 		Damage(damage);
 	}
@@ -97,7 +100,7 @@ public class Combat : MonoBehaviour
 				Image im = T.GetComponent<Image>();
 				RectTransform recTran = T.GetComponent<RectTransform>();
 				recTran.position = new Vector3(Random.Range(0, Screen.width), Random.Range(0, Screen.height));
-				im.color = new Vector4(1, 1, 1, Mathf.Clamp01(.2f + (damage / (pStats.maxHP * .25f))));
+				im.color = new Vector4(1, 1, 1, Mathf.Clamp01(.2f + (damage / (pStats.HP.FinalValue * .25f))));
 			}
 		}
 	}
@@ -144,9 +147,9 @@ public class Combat : MonoBehaviour
 	{
 		if (pStats.bIsAlive)
 		{
-			pStats.curHP = Mathf.Clamp(pStats.curHP += hp, -pStats.maxHP, pStats.maxHP);
-			pStats.curMP = Mathf.Clamp(pStats.curMP += mp, 0, pStats.maxMP);
-			pStats.curSP = Mathf.Clamp(pStats.curSP += sp, 0, pStats.maxSP);
+			pStats.HP.CurValue = Mathf.Clamp(pStats.HP.CurValue += hp, -pStats.HP.FinalValue, pStats.HP.FinalValue);
+			pStats.MP.CurValue = Mathf.Clamp(pStats.MP.CurValue += mp, 0, pStats.MP.FinalValue);
+			pStats.SP.CurValue = Mathf.Clamp(pStats.SP.CurValue += sp, 0, pStats.SP.FinalValue);
 		}
 	}
 
@@ -185,9 +188,9 @@ public class Combat : MonoBehaviour
 	private void Death()
 	{
 		if (pStats.bIsStatic) { return; }
-		pStats.curHP = 0;
-		pStats.curMP = 0;
-		pStats.curSP = 0;
+		pStats.HP.CurValue = 0;
+		pStats.MP.CurValue = 0;
+		pStats.SP.CurValue = 0;
 		pStats.bIsAlive = false;
 		pStats.bCanControl = false;
 		pStats.bIsImmune = true;
@@ -197,15 +200,15 @@ public class Combat : MonoBehaviour
 
 		int K = CoroutineManager.instance.GetK();
 		if (K == -1) { return; }
-		CoroutineManager.instance.Inst[K] = StartCoroutine(Reviving(K, 5f, pStats.maxHP * .1f, pStats.maxMP * .1f, pStats.maxSP * .1f));
+		CoroutineManager.instance.Inst[K] = StartCoroutine(Reviving(K, 5f, pStats.HP.FinalValue * .1f, pStats.MP.FinalValue * .1f, pStats.SP.FinalValue * .1f));
 	}
 	#endregion //Death
 	#region //Revive
 	public void Revive(float hp, float mp, float sp)
 	{
-		pStats.curHP = hp;
-		pStats.curMP = mp;
-		pStats.curSP = sp;
+		pStats.HP.CurValue = hp;
+		pStats.MP.CurValue = mp;
+		pStats.SP.CurValue = sp;
 		Revive();
 	}
 	private void Revive()

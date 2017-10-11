@@ -78,51 +78,51 @@ public class EquipmentManager : MonoBehaviour
 	{
 		if (oldItem != null)
 		{
-			pStats.curStr -= oldItem.Str;
-			pStats.curDex -= oldItem.Dex;
-			pStats.curInt -= oldItem.Inte;
-			pStats.curWill -= oldItem.Will;
-			pStats.curLuck -= oldItem.Luck;
-			pStats.curItemBasicAttributes[0] -= oldItem.Str;
-			pStats.curItemBasicAttributes[1] -= oldItem.Dex;
-			pStats.curItemBasicAttributes[2] -= oldItem.Inte;
-			pStats.curItemBasicAttributes[3] -= oldItem.Will;
-			pStats.curItemBasicAttributes[4] -= oldItem.Luck;
+			pStats.Str.ItemModValue -= oldItem.Str;
+			pStats.Dex.ItemModValue -= oldItem.Dex;
+			pStats.Int.ItemModValue -= oldItem.Inte;
+			pStats.Will.ItemModValue -= oldItem.Will;
+			pStats.Luck.ItemModValue -= oldItem.Luck;
+			//pStats.curItemBasicAttributes[0] -= oldItem.Str;
+			//pStats.curItemBasicAttributes[1] -= oldItem.Dex;
+			//pStats.curItemBasicAttributes[2] -= oldItem.Inte;
+			//pStats.curItemBasicAttributes[3] -= oldItem.Will;
+			//pStats.curItemBasicAttributes[4] -= oldItem.Luck;
 
-			pStats.curItemPDef -= oldItem.PDef;
-			pStats.curItemPPro -= oldItem.PPro;
-			pStats.curItemMDef -= oldItem.MDef;
-			pStats.curItemMPro -= oldItem.MPro;
+			pStats.PDef.ItemModValue -= oldItem.PDef;
+			pStats.PPro.ItemModValue -= oldItem.PPro;
+			pStats.MDef.ItemModValue -= oldItem.MDef;
+			pStats.MPro.ItemModValue -= oldItem.MPro;
 
-			pStats.curItemMin -= oldItem.MinDam;
-			pStats.curItemMax -= oldItem.MaxDam;
-			pStats.curItemBal -= oldItem.Bal;
-			pStats.curItemCrit -= oldItem.Crit;
+			pStats.PAmin.ItemModValue -= oldItem.MinDam;
+			pStats.PAmax.ItemModValue -= oldItem.MaxDam;
+			pStats.Balance.ItemModValue -= oldItem.Bal;
+			pStats.CritRate.ItemModValue -= oldItem.CritR;
 		}
 		if (newItem != null)
 		{
-			pStats.curStr += newItem.Str;
-			pStats.curDex += newItem.Dex;
-			pStats.curInt += newItem.Inte;
-			pStats.curWill += newItem.Will;
-			pStats.curLuck += newItem.Luck;
-			pStats.curItemBasicAttributes[0] += newItem.Str;
-			pStats.curItemBasicAttributes[1] += newItem.Dex;
-			pStats.curItemBasicAttributes[2] += newItem.Inte;
-			pStats.curItemBasicAttributes[3] += newItem.Will;
-			pStats.curItemBasicAttributes[4] += newItem.Luck;
+			pStats.Str.ItemModValue += newItem.Str;
+			pStats.Dex.ItemModValue += newItem.Dex;
+			pStats.Int.ItemModValue += newItem.Inte;
+			pStats.Will.ItemModValue += newItem.Will;
+			pStats.Luck.ItemModValue += newItem.Luck;
+			//pStats.curItemBasicAttributes[0] += newItem.Str;
+			//pStats.curItemBasicAttributes[1] += newItem.Dex;
+			//pStats.curItemBasicAttributes[2] += newItem.Inte;
+			//pStats.curItemBasicAttributes[3] += newItem.Will;
+			//pStats.curItemBasicAttributes[4] += newItem.Luck;
 
-			pStats.curItemPDef += newItem.PDef;
-			pStats.curItemPPro += newItem.PPro;
-			pStats.curItemMDef += newItem.MDef;
-			pStats.curItemMPro += newItem.MPro;
+			pStats.PDef.ItemModValue += newItem.PDef;
+			pStats.PPro.ItemModValue += newItem.PPro;
+			pStats.MDef.ItemModValue += newItem.MDef;
+			pStats.MPro.ItemModValue += newItem.MPro;
 
-			pStats.curItemMin += newItem.MinDam;
-			pStats.curItemMax += newItem.MaxDam;
-			pStats.curItemBal += newItem.Bal;
-			pStats.curItemCrit += newItem.Crit;
+			pStats.PAmin.ItemModValue += newItem.MinDam;
+			pStats.PAmax.ItemModValue += newItem.MaxDam;
+			pStats.Balance.ItemModValue += newItem.Bal;
+			pStats.CritRate.ItemModValue += newItem.CritR;
 		}
-		if (pStats.OnStatsChangeCallback != null)
-			pStats.OnStatsChangeCallback.Invoke();
+		if (pStats.onStatsChangeCallback != null)
+			pStats.onStatsChangeCallback.Invoke();
 	}
 }

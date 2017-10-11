@@ -16,8 +16,12 @@ public class Item : ScriptableObject
 	protected string tooltip = string.Empty;
 	[SerializeField]
 	protected ItemType itemType;
+	[SerializeField]
+	protected int resellValue = 0;
+	[SerializeField]
+	protected int goldValue = 0;
 
-	public int ID	{ set { itemID = value; } get { return itemID; } }
+	public int ID { set { itemID = value; } get { return itemID; } }
 	public int MaxStack { set { maxStack = value; } get { return maxStack; } }
 
 	public Sprite Icon { set { icon = value; } get { return icon; } }
@@ -29,9 +33,10 @@ public class Item : ScriptableObject
 	public string Tooltip { get { return tooltip; } set { tooltip = value; } }
 	public ItemType ItemType { get { return itemType; } }
 
-	protected Item() { }
+	public int GoldValue { get { return goldValue; } set { goldValue = value; } }
+	public int ResellValue { get { return resellValue; } set { resellValue = value; } }
 
-	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip)
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip, int goldValue)
 	{
 		this.itemID = ID;
 		this.itemType = ItemType.BASIC;
@@ -42,6 +47,8 @@ public class Item : ScriptableObject
 		this.isUseable = IsUseable;
 		this.maxStack = maxStack;
 		this.tooltip = tooltip;
+		this.goldValue = goldValue;
+		this.resellValue = (int)(this.goldValue * .1f);
 	}
 
 	public virtual void Use()
