@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
 		{
 			return;
 		}
-		MovingPenalty(.75f, .75f, .75f);
+		MovingPenalty(.35f, .35f, .35f);
 		//if (Input.GetMouseButtonDown(1))
 		//{
 		//Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -82,7 +82,6 @@ public class PlayerController : MonoBehaviour
 				RemoveFocus();
 			}
 		}
-
 	}
 
 	private void MovingPenalty(float HPv, float MPv, float SPv)
@@ -104,7 +103,7 @@ public class PlayerController : MonoBehaviour
 				pStats.MPR_Multiplier.DebuffValue -= MPv;
 				pStats.SPR_Multiplier.DebuffValue -= SPv;
 			}
-
+			//Debug.Log(string.Format("H:{0} M:{1} S:{2}", pStats.HPR_Multiplier.FinalValue, pStats.MPR_Multiplier.FinalValue, pStats.SPR_Multiplier.FinalValue));
 		}
 		lastpos = transform.position;
 		lastMoving = isMoving;
@@ -123,6 +122,7 @@ public class PlayerController : MonoBehaviour
 		}
 		motor.FollowTarget(newFocus);
 	}
+
 	void RemoveFocus()
 	{
 		if (focus != null)

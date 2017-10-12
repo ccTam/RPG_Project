@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
-public class Combat : MonoBehaviour
+public class PlayerCombat : MonoBehaviour
 {
 	[SerializeField]
 	private Transform bloodImages;
@@ -13,7 +13,7 @@ public class Combat : MonoBehaviour
 
 	#region Singleton
 
-	public static Combat instance;
+	public static PlayerCombat instance;
 
 	void Awake()
 	{
@@ -52,6 +52,12 @@ public class Combat : MonoBehaviour
 			if (im.color != Color.clear) { im.color = Color.Lerp(im.color, Color.clear, 3f * Time.deltaTime); }
 		}
 	}
+	#region //Attack
+	public void Attack(float damage)
+	{
+
+	}
+	#endregion //Attack
 	#region //Damage
 	private void Damage(float amount)
 	{

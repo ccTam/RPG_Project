@@ -15,10 +15,10 @@ public class Consumable : Item
 	{
 		base.Use();
 		float interval = .5f;
-		Combat.instance.Hot(hp * interval / dur, mp * interval / dur, sp * interval / dur, interval, dur);
+		PlayerCombat.instance.Hot(hp * interval / dur, mp * interval / dur, sp * interval / dur, interval, dur);
 	}
 
-	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUseable, int maxStack, string tooltip, int goldValue, float hp, float mp, float sp, float dur)
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, bool isUsable, int maxStack, string tooltip, int goldValue, float hp, float mp, float sp, float dur)
 	{
 		this.itemID = ID;
 		this.itemType = ItemType.CONSUMABLE;
@@ -26,7 +26,7 @@ public class Consumable : Item
 		this.name = "I" + name;
 		this.icon = icon;
 		this.isDefaultItem = isDefaultItem;
-		this.isUseable = IsUseable;
+		this.isUsable = isUsable;
 		this.maxStack = maxStack;
 		this.tooltip = tooltip;
 		this.hp = hp;

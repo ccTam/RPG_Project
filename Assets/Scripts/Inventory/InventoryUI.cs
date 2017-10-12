@@ -27,7 +27,7 @@ public class InventoryUI : MonoBehaviour
 			else
 			{
 				slots[i].AddItem(inv.Litems[i]);
-				slots[i].UseButton.interactable = inv.Litems[i].IsUseable;
+				slots[i].UseButton.interactable = inv.Litems[i].IsUsable;
 				if (inv.Litems[i].MaxStack > 1) //if stackable
 				{
 					slots[i].amount.enabled = true;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Stats : MonoBehaviour
+public class Stats
 {
 	private float baseValue = 0,
 		itemModifierValue = 0,
@@ -47,5 +47,9 @@ public class Stats : MonoBehaviour
 		this.debuffValue = 0;
 		this.CurValue = baseValue;
 		this.hasCurValue = hasCurValue;
+	}
+	public override string ToString()
+	{
+		return string.Format("Base:{0} ItemM:{1} Debuff:{2} CurValue:{3}", BaseValue, itemModifierValue, debuffValue, currentValue);
 	}
 }

@@ -10,7 +10,7 @@ public class Item : ScriptableObject
 	[SerializeField]
 	protected Sprite icon = null;
 	[SerializeField]
-	protected bool isDefaultItem = false, isUseable = false;
+	protected bool isDefaultItem = false, isUsable = false;
 	[SerializeField]
 	[TextArea(3, 10)]
 	protected string tooltip = string.Empty;
@@ -27,7 +27,7 @@ public class Item : ScriptableObject
 	public Sprite Icon { set { icon = value; } get { return icon; } }
 
 	public bool IsDefaultItem { set { isDefaultItem = value; } get { return isDefaultItem; } }
-	public bool IsUseable { set { isUseable = value; } get { return isUseable; } }
+	public bool IsUsable { set { isUsable = value; } get { return isUsable; } }
 
 	public string Name { get { return _name; } set { _name = value; } }
 	public string Tooltip { get { return tooltip; } set { tooltip = value; } }
@@ -44,7 +44,7 @@ public class Item : ScriptableObject
 		this.name = "I" + name;
 		this.icon = icon;
 		this.isDefaultItem = isDefaultItem;
-		this.isUseable = IsUseable;
+		this.isUsable = IsUsable;
 		this.maxStack = maxStack;
 		this.tooltip = tooltip;
 		this.goldValue = goldValue;

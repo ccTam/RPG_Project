@@ -11,68 +11,25 @@ public class PlayerStats : MonoBehaviour
 	public Stats HPR, MPR, SPR;
 	public Stats HPR_Multiplier, MPR_Multiplier, SPR_Multiplier;
 	public Stats Str, Dex, Int, Will, Luck;
-	//[SerializeField]
-	//private float[] ItemBasicAttributes = new float[5];
 	public Stats PAmin, PAmax, Balance, MA, CritRate, CritDamage, PDef, PPro, MDef, MPro, APen;
-	[SerializeField]
-	private float lastCombatTime;
+	public Stats AttackSpeed;
 
-	[SerializeField]
+	private float lastCombatTime;
 	private bool canControl, isAlive, isDeadly, isImmune, isStatic;
-	[SerializeField]
-	private int weaponID, Exp, Lv, RemainExp, APts;
+	private int Exp, Lv, RemainExp, APts;
+	private WeaponType weaponID;
 
 	public Leveling lving;
 	private UIController uiController;
 
 	#region //Get Set functions
 
-	//public float maxHP { get { return HP; } set { HP = value; } }
-	//public float curHP { get { return cHP; } set { cHP = value; } }
-	//public float maxMP { get { return MP; } set { MP = value; } }
-	//public float curMP { get { return cMP; } set { cMP = value; } }
-	//public float maxSP { get { return SP; } set { SP = value; } }
-	//public float curSP { get { return cSP; } set { cSP = value; } }
-
-	//public float curHPR { get { return HPR; } set { HPR = value; } }
-	//public float curHPR_M { get { return HPR_Multiplier; } set { HPR_Multiplier = value; } }
-	//public float curMPR { get { return MPR; } set { MPR = value; } }
-	//public float curMPR_M { get { return MPR_Multiplier; } set { MPR_Multiplier = value; } }
-	//public float curSMPR { get { return SPR; } set { SPR = value; } }
-	//public float curSPR_M { get { return SPR_Multiplier; } set { SPR_Multiplier = value; } }
-
-	public int curWeaponID { get { return weaponID; } set { weaponID = value; } }
+	public WeaponType curWeaponID { get { return weaponID; } set { weaponID = value; } }
 	public int curExp { get { return Exp; } }
 	public int curLv { get { return Lv; } }
 	public int curRemainExp { get { return RemainExp; } }
 	public int curAPts { get { return APts; } }
-	//public float curStr { get { return Str; } set { Str = value; } }
-	//public float curDex { get { return Dex; } set { Dex = value; } }
-	//public float curInt { get { return Int; } set { Int = value; } }
-	//public float curWill { get { return Will; } set { Will = value; } }
-	//public float curLuck { get { return Luck; } set { Luck = value; } }
 
-	//public float curPAmin { get { return PAmin; } set { PAmin = value; } }
-	//public float curPAmax { get { return PAmax; } set { PAmax = value; } }
-	//public float curBalance { get { return Balance; } set { Balance = value; } }
-	//public float curMA { get { return MA; } set { MA = value; } }
-	//public float curCritRate { get { return CritRate; } set { CritRate = value; } }
-	//public float curCritDam { get { return CritDamage; } set { CritDamage = value; } }
-	//public float curPDef { get { return PDef; } set { PDef = value; } }
-	//public float curPPro { get { return PPro; } set { PPro = value; } }
-	//public float curMDef { get { return MDef; } set { MDef = value; } }
-	//public float curMPro { get { return MPro; } set { MPro = value; } }
-	//public float curAP { get { return APen; } set { APen = value; } }
-
-	//public float[] curItemBasicAttributes { get { return ItemBasicAttributes; } set { ItemBasicAttributes = value; } }
-	//public float curItemMin { get { return ItemMin; } set { ItemMin = value; } }
-	//public float curItemMax { get { return ItemMax; } set { ItemMax = value; } }
-	//public float curItemBal { get { return ItemBal; } set { ItemBal = value; } }
-	//public float curItemCrit { get { return ItemCrit; } set { ItemCrit = value; } }
-	//public float curItemPDef { get { return ItemPDef; } set { ItemPDef = value; } }
-	//public float curItemPPro { get { return ItemPPro; } set { ItemPPro = value; } }
-	//public float curItemMDef { get { return ItemMDef; } set { ItemMDef = value; } }
-	//public float curItemMPro { get { return ItemMPro; } set { ItemMPro = value; } }
 	public float curlastCombatTime { get { return lastCombatTime; } set { lastCombatTime = value; } }
 
 	public bool bCanControl { get { return canControl; } set { canControl = value; } }
@@ -101,25 +58,10 @@ public class PlayerStats : MonoBehaviour
 	{
 		lving = GetComponent<Leveling>();
 		uiController = UIController.instance;
-		weaponID = 0;
+		weaponID = WeaponType.None;
 		Initialize_HMSP(100, .4f, 50, .25f, 50f, 1.9f);
 		Initialize_Attributes(0, 10f, 10f, 10f, 10f, 10f, 0f, 1.5f);
 		onStatsChangeCallback += CalCombatStats;
-
-	}
-
-	void Update()
-	{
-		if (isAlive && !isStatic)
-		{
-			UnitRegen();
-		}
-		if (Input.GetKey(KeyCode.R))
-		{
-			GainExp((int)(400 * (Lv + .5f)));
-		}
-		if (onStatsChangeCallback != null)
-			onStatsChangeCallback.Invoke();
 	}
 
 	void Initialize_HMSP(float hp, float hpr, float mp, float mpr, float sp, float spr)
@@ -127,6 +69,7 @@ public class PlayerStats : MonoBehaviour
 		Exp = 0;
 		Lv = 0;
 		RemainExp = 400;
+		AttackSpeed = new Stats(2f, true);
 		HP = new Stats(hp, true);
 		MP = new Stats(mp, true);
 		SP = new Stats(sp, true);
@@ -164,6 +107,25 @@ public class PlayerStats : MonoBehaviour
 		APen = new Stats(0, true);
 	}
 
+	void Update()
+	{
+		if (isAlive && !isStatic)
+		{
+			UnitRegen();
+		}
+		if (Input.GetKey(KeyCode.R))
+		{
+			GainExp((int)(400 * (Lv + .5f)));
+		}
+		if (Input.GetKeyDown(KeyCode.F))
+		{
+			Debug.Log("GetAttackDamage: " + GetAttackDamage());
+		}
+
+		if (onStatsChangeCallback != null)
+			onStatsChangeCallback.Invoke();
+	}
+
 	private void CalCombatStats()
 	{
 		MA.BaseValue = (Int.BaseValue - 10) / 5f;
@@ -190,30 +152,31 @@ public class PlayerStats : MonoBehaviour
 		APen.CurValue = (Dex.FinalValue - 10) / 15f + APen.ModifiedValue;
 
 		Balance.BaseValue = Mathf.Clamp(8.728944f * (Mathf.Log((Dex.BaseValue + 10) / 20, 2)), 0, 50);
-		Balance.CurValue = Mathf.Clamp(8.728944f * (Mathf.Log((Dex.FinalValue + 10) / 20, 2)), 0, 50) + Balance.ModifiedValue;
+		Balance.CurValue = Mathf.Clamp(
+			Mathf.Clamp(8.728944f * (Mathf.Log((Dex.FinalValue + 10) / 20, 2)), 0, 50) + Balance.ModifiedValue, 0, 80);
 
 		switch (weaponID)
 		{
-			case (int)WeaponType.None:
-			case (int)WeaponType.Melee:
+			case WeaponType.None:
+			case WeaponType.Melee:
 				PAmin.BaseValue = Str.BaseValue / 3f;
 				PAmin.CurValue = Str.FinalValue / 3f + PAmin.ModifiedValue;
 				PAmax.BaseValue = Str.BaseValue / 2.5f;
 				PAmax.CurValue = Str.FinalValue / 2.5f + PAmax.ModifiedValue;
 				break;
-			case (int)WeaponType.Archery:
+			case WeaponType.Archery:
 				PAmin.BaseValue = Dex.BaseValue / 3.5f;
 				PAmin.CurValue = Dex.FinalValue / 3.5f + PAmin.ModifiedValue;
 				PAmax.BaseValue = Dex.BaseValue / 2.5f;
 				PAmax.CurValue = Dex.FinalValue / 2.5f + PAmax.ModifiedValue;
 				break;
-			case (int)WeaponType.VoidMagic:
+			case WeaponType.VoidMagic:
 				PAmin.BaseValue = (Dex.BaseValue + Int.BaseValue) / 2 / 3f;
 				PAmin.CurValue = (Dex.FinalValue + Int.FinalValue) / 2 / 3f + PAmin.ModifiedValue;
 				PAmax.BaseValue = (Str.BaseValue + Dex.BaseValue + Int.BaseValue) / 3 / 2.5f;
 				PAmax.CurValue = (Str.FinalValue + Dex.FinalValue + Int.FinalValue) / 3 / 2.5f + PAmax.ItemModValue;
 				break;
-			case (int)WeaponType.DarkShield:
+			case WeaponType.DarkShield:
 				PAmin.BaseValue = Str.BaseValue / 3f + HP.BaseValue * .05f;
 				PAmin.CurValue = Str.FinalValue / 3f + HP.FinalValue * .05f + PAmin.ModifiedValue;
 				PAmax.BaseValue = Str.BaseValue / 2.5f + HP.BaseValue * .05f;
@@ -226,27 +189,41 @@ public class PlayerStats : MonoBehaviour
 
 	private void UnitRegen()
 	{
+		float _regenMultiplier;
 		if (HP.CurValue > 0 && isDeadly)
 		{
 			isDeadly = false;
 		}
 		if (HP.CurValue < HP.FinalValue)
 		{
-			HP.CurValue += HPR.FinalValue * HPR_Multiplier.FinalValue * Time.deltaTime;
+			_regenMultiplier = Mathf.Clamp(HPR_Multiplier.FinalValue, 0, Mathf.Infinity);
+			HP.CurValue += HPR.FinalValue * _regenMultiplier * Time.deltaTime;
 			HP.CurValue = Mathf.Clamp(HP.CurValue, -HP.FinalValue, HP.FinalValue);
 		}
 		if (MP.CurValue < MP.FinalValue)
 		{
-			MP.CurValue += MPR.FinalValue * MPR_Multiplier.FinalValue * Time.deltaTime;
+			_regenMultiplier = Mathf.Clamp(MPR_Multiplier.FinalValue, 0, Mathf.Infinity);
+			MP.CurValue += MPR.FinalValue * _regenMultiplier * Time.deltaTime;
 			MP.CurValue = Mathf.Clamp(MP.CurValue, 0.0f, MP.FinalValue);
 		}
 		if (SP.CurValue < SP.FinalValue)
 		{
-			SP.CurValue += SPR.FinalValue * SPR_Multiplier.FinalValue * Time.deltaTime;
+			_regenMultiplier = Mathf.Clamp(SPR_Multiplier.FinalValue, 0, Mathf.Infinity);
+			SP.CurValue += SPR.FinalValue * _regenMultiplier * Time.deltaTime;
 			SP.CurValue = Mathf.Clamp(SP.CurValue, 0.0f, SP.FinalValue);
 		}
 	}
 
+	public float GetAttackDamage()
+	{
+		float damage = PAmax.CurValue - PAmin.CurValue;
+		return damage * Random.Range(Balance.CurValue / 100f, 1f) + PAmin.CurValue;
+	}
+
+	public bool canAttack()
+	{
+		return (isAlive && !isStatic);
+	}
 	#region //Exp
 	public void GainExp(int exp)
 	{

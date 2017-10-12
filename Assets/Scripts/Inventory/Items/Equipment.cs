@@ -13,7 +13,7 @@ public class Equipment : Item
 					minDam = 0, maxDam = 0, bal = 0, critr = 0, critd = 0,
 					pDef = 0, pPro = 0, mDef = 0, mPro = 0;	
 
-	public int WeaponID { get { return (int)weaponID; } }
+	public WeaponType WeaponID { get { return weaponID; } }
 
 	public float Str { get { return str; } set { str = value; } }
 	public float Dex { get { return dex; } set { dex = value; } }
@@ -38,7 +38,7 @@ public class Equipment : Item
 		EquipmentManager.instance.Equip(this);
 	}
 
-	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, EquipSlot equipSlot, WeaponType weaponID, bool isUseable, int maxStack, string tooltip, int goldValue, float str, float dex, float inte, float will, float luck, float minDam, float maxDam, float bal, float crit, float pDef, float pPro, float mDef, float mPro)
+	public void ItemInit(int ID, string name, Sprite icon, bool isDefaultItem, EquipSlot equipSlot, WeaponType weaponID, bool isUsable, int maxStack, string tooltip, int goldValue, float str, float dex, float inte, float will, float luck, float minDam, float maxDam, float bal, float crit, float pDef, float pPro, float mDef, float mPro)
 	{
 		this.itemID = ID;
 		this.itemType = ItemType.EQUIPMENT;
@@ -48,7 +48,7 @@ public class Equipment : Item
 		this.isDefaultItem = isDefaultItem;
 		this.equipSlot = equipSlot;
 		this.weaponID = weaponID;
-		this.isUseable = isUseable;
+		this.isUsable = isUsable;
 		this.maxStack = maxStack;
 		this.tooltip = tooltip;
 		this.str = str;

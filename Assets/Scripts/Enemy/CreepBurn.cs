@@ -18,7 +18,7 @@ public class CreepBurn : MonoBehaviour
 		if (t >= damInterval)
 		{
 			float percentBurn = .08f;
-			Combat.instance.Dot(PlayerStats.instance.HP.FinalValue * percentBurn, PlayerStats.instance.MP.FinalValue * percentBurn, PlayerStats.instance.SP.FinalValue * percentBurn, 0f, 0f);
+			PlayerCombat.instance.Dot(PlayerStats.instance.HP.FinalValue * percentBurn, PlayerStats.instance.MP.FinalValue * percentBurn, PlayerStats.instance.SP.FinalValue * percentBurn, 0f, 0f);
 			t = 0;
 		}
 		t += Time.fixedDeltaTime;

@@ -46,7 +46,7 @@ public class CoroutineManager : MonoBehaviour
 				return i;
 			}
 		}
-		Debug.Log("K Over bound");
+		Debug.LogError("TOO MANY COROUTINE REQUESTS, K OVER BOUND!!");
 		return -1;
 	}
 

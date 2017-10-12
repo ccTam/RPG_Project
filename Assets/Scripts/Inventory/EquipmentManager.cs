@@ -83,11 +83,6 @@ public class EquipmentManager : MonoBehaviour
 			pStats.Int.ItemModValue -= oldItem.Inte;
 			pStats.Will.ItemModValue -= oldItem.Will;
 			pStats.Luck.ItemModValue -= oldItem.Luck;
-			//pStats.curItemBasicAttributes[0] -= oldItem.Str;
-			//pStats.curItemBasicAttributes[1] -= oldItem.Dex;
-			//pStats.curItemBasicAttributes[2] -= oldItem.Inte;
-			//pStats.curItemBasicAttributes[3] -= oldItem.Will;
-			//pStats.curItemBasicAttributes[4] -= oldItem.Luck;
 
 			pStats.PDef.ItemModValue -= oldItem.PDef;
 			pStats.PPro.ItemModValue -= oldItem.PPro;
@@ -101,16 +96,12 @@ public class EquipmentManager : MonoBehaviour
 		}
 		if (newItem != null)
 		{
+			pStats.curWeaponID = newItem.WeaponID;
 			pStats.Str.ItemModValue += newItem.Str;
 			pStats.Dex.ItemModValue += newItem.Dex;
 			pStats.Int.ItemModValue += newItem.Inte;
 			pStats.Will.ItemModValue += newItem.Will;
 			pStats.Luck.ItemModValue += newItem.Luck;
-			//pStats.curItemBasicAttributes[0] += newItem.Str;
-			//pStats.curItemBasicAttributes[1] += newItem.Dex;
-			//pStats.curItemBasicAttributes[2] += newItem.Inte;
-			//pStats.curItemBasicAttributes[3] += newItem.Will;
-			//pStats.curItemBasicAttributes[4] += newItem.Luck;
 
 			pStats.PDef.ItemModValue += newItem.PDef;
 			pStats.PPro.ItemModValue += newItem.PPro;
@@ -121,6 +112,10 @@ public class EquipmentManager : MonoBehaviour
 			pStats.PAmax.ItemModValue += newItem.MaxDam;
 			pStats.Balance.ItemModValue += newItem.Bal;
 			pStats.CritRate.ItemModValue += newItem.CritR;
+		}
+		else
+		{
+			pStats.curWeaponID = WeaponType.None;
 		}
 		if (pStats.onStatsChangeCallback != null)
 			pStats.onStatsChangeCallback.Invoke();

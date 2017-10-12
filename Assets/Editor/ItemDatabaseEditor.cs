@@ -12,7 +12,7 @@ public class ItemDatabaseEditor : EditorWindow
 	private ItemType itemType;
 	private WeaponType weaponType;
 	private EquipSlot equipType;
-	private int selectedItem = 0, itemMaxStack = 0, nextID = 0, goldValue = 0, resellValue = 0;
+	private int selectedItem = 0, itemMaxStack = 0, nextID = 0, goldValue = 0;
 	private string itemName, itemTooltip;
 	private float str = 0, dex = 0, inte = 0, will = 0, luck = 0,
 				minDam = 0, maxDam = 0, bal = 0, crit = 0,
@@ -62,10 +62,10 @@ public class ItemDatabaseEditor : EditorWindow
 		else
 		{
 			Debug.Log("COUNT: " + itemDatabase.COUNT);
-			for (int i = 0; i < itemDatabase.COUNT; i++)
-			{
-				Debug.Log(String.Format("[{0}]: ({1}){2}", i, itemDatabase.GetItem(i).name, itemDatabase.GetItem(i).Name));
-			}
+			//for (int i = 0; i < itemDatabase.COUNT; i++)
+			//{
+			//	Debug.Log(String.Format("[{0}]: ({1}){2}", i, itemDatabase.GetItem(i).name, itemDatabase.GetItem(i).Name));
+			//}
 		}
 	}
 
@@ -99,7 +99,7 @@ public class ItemDatabaseEditor : EditorWindow
 				return;
 			}
 			string sMaxStack = tempItem.MaxStack > 0 ? tempItem.MaxStack.ToString("00") : "00";
-			string sUseable = tempItem.IsUseable ? "*" : "-";
+			string sUseable = tempItem.IsUsable ? "*" : "-";
 			if (GUILayout.Button(String.Format("#{0} - {1}\\{2}{3}", tempItem.ID.ToString("000"), sMaxStack, sUseable, tempItem.Name), "box", null))
 			{
 				selectedItem = i;
@@ -111,7 +111,7 @@ public class ItemDatabaseEditor : EditorWindow
 		EditorGUILayout.EndScrollView();
 
 		EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
-		EditorGUILayout.LabelField("Items: " + itemDatabase.COUNT, GUILayout.Width(100));
+		EditorGUILayout.LabelField("Item(s): " + itemDatabase.COUNT, GUILayout.Width(100));
 
 		if (GUILayout.Button("New Item"))
 			state = State.ADD;
@@ -171,10 +171,10 @@ public class ItemDatabaseEditor : EditorWindow
 		switch (itemDatabase.GetItem(selectedItem).ItemType)
 		{
 			case ItemType.BASIC:
-				itemDatabase.GetItem(selectedItem).IsUseable = EditorGUILayout.Toggle(new GUIContent("Useable: "), itemDatabase.GetItem(selectedItem).IsUseable);
+				itemDatabase.GetItem(selectedItem).IsUsable = EditorGUILayout.Toggle(new GUIContent("Usable: "), itemDatabase.GetItem(selectedItem).IsUsable);
 				break;
 			case ItemType.CONSUMABLE:
-				itemDatabase.GetItem(selectedItem).IsUseable = EditorGUILayout.Toggle(new GUIContent("Useable: "), true);
+				itemDatabase.GetItem(selectedItem).IsUsable = EditorGUILayout.Toggle(new GUIContent("Usable: "), true);
 				Consumable conItem = (Consumable)itemDatabase.GetItem(selectedItem);
 				conItem.HP = float.Parse(EditorGUILayout.TextField(new GUIContent("Total HP Regenerate: "), conItem.HP.ToString()));
 				conItem.MP = float.Parse(EditorGUILayout.TextField(new GUIContent("Total MP Regenerate: "), conItem.MP.ToString()));
@@ -182,7 +182,7 @@ public class ItemDatabaseEditor : EditorWindow
 				conItem.Dur = float.Parse(EditorGUILayout.TextField(new GUIContent("Effect Duration: "), conItem.Dur.ToString()));
 				break;
 			case ItemType.EQUIPMENT:
-				itemDatabase.GetItem(selectedItem).IsUseable = EditorGUILayout.Toggle(new GUIContent("Useable: "), true);
+				itemDatabase.GetItem(selectedItem).IsUsable = EditorGUILayout.Toggle(new GUIContent("Usable: "), true);
 				Equipment eqItem = (Equipment)itemDatabase.GetItem(selectedItem);
 				eqItem.Str = float.Parse(EditorGUILayout.TextField(new GUIContent("Strength: "), eqItem.Str.ToString()));
 				eqItem.Dex = float.Parse(EditorGUILayout.TextField(new GUIContent("Dexterity: "), eqItem.Dex.ToString()));
@@ -197,9 +197,7 @@ public class ItemDatabaseEditor : EditorWindow
 				eqItem.PPro = float.Parse(EditorGUILayout.TextField(new GUIContent("P.Protection: "), eqItem.PPro.ToString()));
 				eqItem.MDef = float.Parse(EditorGUILayout.TextField(new GUIContent("M.Defense: "), eqItem.MDef.ToString()));
 				eqItem.MPro = float.Parse(EditorGUILayout.TextField(new GUIContent("M.Protection: "), eqItem.MPro.ToString()));
-
 				break;
-
 			default:
 				Debug.LogError("Unrecognized ItemType");
 				break;
@@ -213,6 +211,7 @@ public class ItemDatabaseEditor : EditorWindow
 		if (GUILayout.Button("Done", GUILayout.Width(100)))
 		{
 			itemDatabase.SortAlphabeticallyAtoZ();
+			EditorUtility.SetDirty(itemDatabase.GetItem(selectedItem));
 			EditorUtility.SetDirty(itemDatabase);
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
@@ -237,10 +236,10 @@ public class ItemDatabaseEditor : EditorWindow
 		switch (itemType)
 		{
 			case ItemType.BASIC:
-				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Useable: "), isUseable));
+				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Usable: "), isUseable));
 				break;
 			case ItemType.CONSUMABLE:
-				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Useable: "), true));
+				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Usable: "), true));
 				hp = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Total HP Regenerate: "), hp.ToString()));
 				mp = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Total MP Regenerate: "), mp.ToString()));
 				sp = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Total SP Regenerate: "), sp.ToString()));
@@ -250,7 +249,7 @@ public class ItemDatabaseEditor : EditorWindow
 				equipType = (EquipSlot)EditorGUILayout.EnumPopup(new GUIContent("Equip Type: "), equipType, GUILayout.Width(300));
 				if (equipType == EquipSlot.Weapon)
 					weaponType = (WeaponType)EditorGUILayout.EnumPopup(new GUIContent("Weapon Type: "), weaponType, GUILayout.Width(300));
-				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Useable: "), true));
+				isUseable = Convert.ToBoolean(EditorGUILayout.Toggle(new GUIContent("Usable: "), true));
 				str = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Strength: "), str.ToString()));
 				dex = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Dexterity: "), dex.ToString()));
 				inte = Convert.ToInt32(EditorGUILayout.TextField(new GUIContent("Intelligence: "), inte.ToString()));
@@ -285,6 +284,7 @@ public class ItemDatabaseEditor : EditorWindow
 						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip, goldValue);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
+						EditorUtility.SetDirty(newItem);
 					}
 					break;
 				case ItemType.CONSUMABLE:
@@ -293,6 +293,7 @@ public class ItemDatabaseEditor : EditorWindow
 						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, isUseable, itemMaxStack, itemTooltip, goldValue, hp, mp, sp, dur);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
+						EditorUtility.SetDirty(newItem);
 					}
 					break;
 				case ItemType.EQUIPMENT:
@@ -301,6 +302,7 @@ public class ItemDatabaseEditor : EditorWindow
 						newItem.ItemInit(nextID, itemName, itemSprite, isDefaultItem, equipType, weaponType, isUseable, itemMaxStack, itemTooltip, goldValue, str, dex, inte, will, luck, minDam, maxDam, bal, crit, pDef, pPro, mDef, mPro);
 						AssetDatabase.CreateAsset(newItem, DATABASE_PATH_ITEMS + String.Format("{0}.asset", nextID.ToString("000")));
 						itemDatabase.Add(newItem);
+						EditorUtility.SetDirty(newItem);
 					}
 					break;
 				default:
@@ -312,7 +314,7 @@ public class ItemDatabaseEditor : EditorWindow
 			itemMaxStack = 0;
 			str = 0; dex = 0; inte = 0; will = 0; luck = 0;
 			minDam = 0; maxDam = 0; bal = 0; crit = 0; pDef = 0; pPro = 0; mDef = 0; mPro = 0;
-			hp = 0; mp = 0; sp = 0; dur = 0; goldValue = 0; resellValue = 0;
+			hp = 0; mp = 0; sp = 0; dur = 0; goldValue = 0;
 			isDefaultItem = false;
 			isUseable = false;
 			itemTooltip = "Tooltip MISSING!";

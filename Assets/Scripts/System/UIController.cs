@@ -86,15 +86,6 @@ public class UIController : MonoBehaviour
 		}
 		else
 			MainHPBlur.value = MainHPSlider.value;
-
-		//if (tObj != null)
-		//{
-		//	Destroy(tObj);
-		//}
-		//tObj = Instantiate(hpBar);
-		//tObj.transform.SetParent(WorldCanvas.transform);
-		//tObj.transform.position = new Vector3(player.position.x, player.position.y + 1.7f, player.position.z);
-		//tObj.transform.LookAt(Camera.main.transform.position);
 	}
 
 	void Update_HMSP()
@@ -159,6 +150,8 @@ public class UIController : MonoBehaviour
 
 	void Update_Attributes()
 	{
+		APts.text = pStats.curAPts.ToString("0");
+
 		float t1, t2, t3, t4;
 		t1 = pStats.Str.BaseValue; t2 = pStats.Str.FinalValue;
 		Str.text = t1 != t2 ? string.Format("{0} <color=#FFD500FF>({1})</color>", t1.ToString("0"), t2.ToString("0")) : string.Format("{0}", t1.ToString("0"));
@@ -204,15 +197,5 @@ public class UIController : MonoBehaviour
 		t1 = pStats.APen.BaseValue; t2 = pStats.APen.CurValue;
 		APen.text = t1 != t2 ? string.Format("{0} <color=#FFD500FF>({1})</color>", t1.ToString("0"), t2.ToString("0")) : string.Format("{0}", t1.ToString("0"));
 
-		//Balance.text = string.Format("{0}%", pStats.curBalance.ToString("0"));
-		//MA.text = string.Format("{0}", pStats.curMA.ToString("0"));
-		//Crit.text = string.Format("{0}% <color=#FFB74BFF>(+{1}%)</color>", pStats.curCritRate.ToString("0"), pStats.curCritDam.ToString("0"));
-		//PDef.text = pStats.curPDef.ToString("0");
-		//PPro.text = pStats.curPPro.ToString("0");
-		//MDef.text = pStats.curMDef.ToString("0");
-		//MPro.text = pStats.curMPro.ToString("0");
-		//APen.text = string.Format("{0}", pStats.curAP.ToString("0"), pStats.curAP.ToString("0"));
-		////AP.text = string.Format("{0} ({1})", pStats.curAP.ToString("0"), pStats.curAP.ToString("0"));
-		APts.text = pStats.curAPts.ToString("0");
 	}
 }
