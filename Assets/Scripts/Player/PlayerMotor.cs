@@ -33,7 +33,7 @@ public class PlayerMotor : MonoBehaviour
 	}
 	public void FollowTarget (Interactable newTarget)
 	{
-		agent.stoppingDistance = newTarget.radius * .8f;
+		agent.stoppingDistance = newTarget.interactRadius * .8f;
 		//agent.updateRotation = false;
 		target = newTarget.interactionTransform;
 	}

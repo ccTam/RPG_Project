@@ -15,6 +15,7 @@ public class PlayerStats : MonoBehaviour
 	public Stats AttackSpeed;
 
 	private float lastCombatTime;
+	[SerializeField]
 	private bool canControl, isAlive, isDeadly, isImmune, isStatic;
 	private int Exp, Lv, RemainExp, APts;
 	private WeaponType weaponID;
@@ -213,17 +214,27 @@ public class PlayerStats : MonoBehaviour
 			SP.CurValue = Mathf.Clamp(SP.CurValue, 0.0f, SP.FinalValue);
 		}
 	}
-
+	#region //Attack
 	public float GetAttackDamage()
 	{
-		float damage = PAmax.CurValue - PAmin.CurValue;
-		return damage * Random.Range(Balance.CurValue / 100f, 1f) + PAmin.CurValue;
+		float damage = (PAmax.CurValue - PAmin.CurValue) * Random.Range(Balance.CurValue / 100f, 1f) + PAmin.CurValue;
+		if (Random.Range(0, 100) < CritRate.CurValue)
+		{
+			Debug.Log("Attacked for (CRIT):" + damage * CritDamage.CurValue);
+			return damage * CritDamage.CurValue;
+		}
+		else
+		{
+			Debug.Log("Attacked for :" + damage);
+			return damage;
+		}
 	}
 
 	public bool canAttack()
 	{
 		return (isAlive && !isStatic);
 	}
+	#endregion //Attack
 	#region //Exp
 	public void GainExp(int exp)
 	{

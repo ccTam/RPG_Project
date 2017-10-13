@@ -2,7 +2,6 @@
 
 public class Leveling : MonoBehaviour
 {
-	[SerializeField]
 	private int[] requiredExp;
 	private const int MAXLEVEL = 200;
 

@@ -7,7 +7,6 @@ public class PlayerCombat : MonoBehaviour
 {
 	[SerializeField]
 	private Transform bloodImages;
-	[SerializeField]
 	//AudioSource audioSource;
 	PlayerStats pStats;
 
@@ -45,19 +44,13 @@ public class PlayerCombat : MonoBehaviour
 		{
 			Hot(pStats.HP.FinalValue * .02f, pStats.MP.FinalValue * .02f, pStats.SP.FinalValue * .02f, 1f, 5f);
 		}
-
 		foreach (Transform T in bloodImages)
 		{
 			Image im = T.GetComponent<Image>();
 			if (im.color != Color.clear) { im.color = Color.Lerp(im.color, Color.clear, 3f * Time.deltaTime); }
 		}
 	}
-	#region //Attack
-	public void Attack(float damage)
-	{
 
-	}
-	#endregion //Attack
 	#region //Damage
 	private void Damage(float amount)
 	{

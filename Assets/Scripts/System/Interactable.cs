@@ -4,12 +4,12 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
 
-	public float radius = 3f;
+	public float interactRadius = 3f;
 	public Transform interactionTransform;
 	bool isFocus = false;
 	bool isInteracting = false;
 	Transform player;
-	public bool canPickUp = true;
+	public bool canPickUp = false;
 
 	public virtual void Interact()
 	{
@@ -28,7 +28,7 @@ public class Interactable : MonoBehaviour
 			if (isFocus && !isInteracting)
 			{
 				float distance = Vector3.Distance(player.position, interactionTransform.position);
-				if (distance <= radius)
+				if (distance <= interactRadius)
 				{
 					Interact();
 					isInteracting = true;
@@ -63,6 +63,6 @@ public class Interactable : MonoBehaviour
 			interactionTransform = transform;
 		}
 		Gizmos.color = Color.yellow;
-		Gizmos.DrawWireSphere(interactionTransform.position, radius);
+		Gizmos.DrawWireSphere(interactionTransform.position, interactRadius);
 	}
 }

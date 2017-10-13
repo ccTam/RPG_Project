@@ -59,14 +59,14 @@ public class ItemDatabaseEditor : EditorWindow
 			Debug.Log("CREATE new DB");
 			CreateDatabase();
 		}
-		else
-		{
-			Debug.Log("COUNT: " + itemDatabase.COUNT);
+		//else
+		//{
+			//Debug.Log("COUNT: " + itemDatabase.COUNT);
 			//for (int i = 0; i < itemDatabase.COUNT; i++)
 			//{
 			//	Debug.Log(String.Format("[{0}]: ({1}){2}", i, itemDatabase.GetItem(i).name, itemDatabase.GetItem(i).Name));
 			//}
-		}
+		//}
 	}
 
 	void CreateDatabase()

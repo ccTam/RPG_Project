@@ -24,10 +24,15 @@ public class EnemyController : MonoBehaviour
 
 	void Update()
 	{
+		SearchAndAttack();
+	}
+
+	private void SearchAndAttack()
+	{
 		float distance = Vector3.Distance(transform.position, target.position);
 		stats = GetComponent<EnemyStats>();
 		stats.AttackSpeed.CurValue -= Time.deltaTime;
-		if (distance <= searchRadius )
+		if (distance <= searchRadius)
 		{
 			agent.SetDestination(target.position);
 			if (distance <= agent.stoppingDistance && pStats.canAttack())
@@ -40,12 +45,12 @@ public class EnemyController : MonoBehaviour
 						stats.AttackSpeed.CurValue = stats.AttackSpeed.FinalValue;
 					}
 				}
-				FaceTarget();
+				FaceTarget(target);
 			}
 		}
 	}
 
-	private void FaceTarget()
+	private void FaceTarget(Transform target)
 	{
 		Vector3 direction = (target.position - transform.position).normalized;
 		Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));

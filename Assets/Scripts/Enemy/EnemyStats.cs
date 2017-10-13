@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-
 	public Stats HP, MP, SP;
 	public Stats HPR, MPR, SPR;
 	public Stats HPR_Multiplier, MPR_Multiplier, SPR_Multiplier;
@@ -17,7 +16,7 @@ public class EnemyStats : MonoBehaviour
 	public int Lv;
 
 	[SerializeField]
-	private GameObject HPBar, Obj;
+	private GameObject HPBar, Prefab;
 	[SerializeField]
 	private GameObject WorldCanvas;
 
@@ -25,8 +24,7 @@ public class EnemyStats : MonoBehaviour
 	{
 		Initialize_HMSP(50, .4f, 50, .25f, 50f, 1.9f);
 		Initialize_Attributes(0, 10f, 10f, 10f, 10f, 10f, 40f, 1.5f);
-		//HPBar = Instantiate(Resources.Load(RESOURCES_PATH, typeof(GameObject)) as GameObject);
-		HPBar = Instantiate(Obj);
+		HPBar = Instantiate(Prefab);
 		HPBar.transform.SetParent(WorldCanvas.transform);
 	}
 
@@ -123,7 +121,5 @@ public class EnemyStats : MonoBehaviour
 			Debug.Log("Attacked player for :" + damage);
 			return damage;
 		}
-		
-		
 	}
 }
